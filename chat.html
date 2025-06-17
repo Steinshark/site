@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/@microsoft/fetch-event-source@2.0.1/lib/umd/index.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SLM Chat Interface</title>
+  <style>
+    :root {
+      --bg-dark: #121212;
+      --text-light: #e0e0e0;
+      --accent: linear-gradient(90deg, #00FFFF, #8A2BE2, #32CD32);
+      --button_color: linear-gradient(90deg, #00FFFF, #8A2BE2);
+      --panel-dark: #1e1e1e;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      padding: 1rem;
+      background: var(--accent);
+      color: black;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav a {
+      color: black;
+      margin: 0 1rem;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 20%;
+      background-color: var(--panel-dark);
+      padding: 1rem;
+      overflow-y: auto;
+      border-right: 1px solid #333;
+    }
+
+    .chatbox {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 1rem;
+    }
+
+    .input {
+      display: flex;
+    }
+
+    .input textarea {
+      flex: 1;
+      resize: none;
+      padding: 0.5rem;
+      background-color: #2a2a2a;
+      color: var(--text-light);
+      border: none;
+      border-radius: 4px;
+    }
+
+    .input button {
+      margin-left: 0.5rem;
+      background: var(--button_color);
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-weight: bold;
+      color: black;
+    }
+
+    .sidebar button {
+      margin-bottom: 1rem;
+      background: var(--accent);
+      border: none;
+      padding: 0.5rem 1rem;
+      width: 100%;
+      font-weight: bold;
+      color: black;
+      cursor: pointer;
+    }
+
+    .conversation-item {
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+
+    .conversation-item:hover {
+      background-color: #333;
+    }
+
+    .form-container {
+      max-width: 400px;
+      margin: 2rem auto;
+      background-color: #1e1e1e;
+      padding: 2rem;
+      border-radius: 8px;
+    }
+
+    .form-container h2 {
+      text-align: center;
+    }
+
+    .form-container input[type="text"],
+    .form-container input[type="password"] {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      background-color: #2a2a2a;
+      color: var(--text-light);
+      border: none;
+      border-radius: 4px;
+    }
+
+    .form-container button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 1rem;
+      background: var(--accent);
+      color: black;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .stat {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+    }
+
+  .stat .label {
+    flex: 1;
+    font-weight: bold;
+    color: #ccc;
+  }
+
+  .stat .value {
+    text-align: right;
+    white-space: nowrap;
+    margin-left: 10px;
+    color: #eee;
+  }
+
+  #debug-container {
+    margin-top: 10px;
+  }
+
+  #debug-box {
+    width: 100%;
+    height: 120px;
+    background-color: #1e1e1e;
+    color: #00ff88;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 8px;
+    font-family: monospace;
+    font-size: 0.9em;
+    resize: none;
+    overflow-y: scroll;
+    box-sizing: border-box;
+  }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div><strong>SLM Chat</strong></div>
+    <nav>
+      <a href="./index.html">Home</a>
+      <a href="./story.html">Story</a>
+      <a href="./projects.html">Projects</a>
+      <a href="'./chat.html">Chat</a>
+    </nav>
+  </header>
+
+  <div class="main" id="chat-section">
+    <aside class="sidebar">
+      <h2>Model Stats</h2>
+      <div class="stat">
+        <span class="label">Name:</span>
+        <span class="value" id="model_name">Steinshark LLM</span>
+      </div>
+      <div class="stat">
+        <span class="label">Parameters:</span>
+        <span class="value" id="param_count">loading...</span>
+      </div>
+      <div class="stat">
+        <span class="label">Layers:</span>
+        <span class="value" id="layer_count">loading...</span>
+      </div>
+      <div class="stat">
+        <span class="label">Embedding Size:</span>
+        <span class="value" id="embed_size">loading...</span>
+      </div>
+      <div class="stat">
+        <span class="label">Vocab Size:</span>
+        <span class="value" id="vocab_size">loading...</span>
+      </div>
+
+      <hr style="border: 0; border-top: 1px solid #444; margin: 15px 0;">
+
+      <div class="stat">
+        <span class="label">Training Phase:</span>
+        <span class="value" id="phase">loading...</span>
+      </div>
+      <div class="stat">
+        <span class="label">Current Loss:</span>
+        <span class="value" id="loss">loading...</span>
+      </div>
+      <div class="stat">
+        <span class="label">Data Type:</span>
+        <span class="value" id="dtype">loading...</span>
+      </div>
+      <div class="stat">
+        <span class="label">Tokens Trained:</span>
+        <span class="value" id="tokens_trained">loading...</span>
+      </div>
+      <div class="stat">
+        <span class="label">Last Update:</span>
+        <span class="value" id="last_update">loading...</span>
+      </div>      
+
+      <hr style="border: 0; border-top: 1px solid #444; margin: 15px 0;">
+      <div id="debug-container">
+        <label for="debug-box" style="color: #ccc; font-weight: bold;">Debug Log</label><br>
+        <textarea id="debug-box" readonly></textarea>
+      </div>
+    </aside>
+
+
+
+      <div class="chatbox">
+        <div class="messages" id="messages"></div>
+        <div class="input">
+          <textarea id="user-input" rows="2" placeholder="Type your message..."></textarea>
+          <button onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+    
+    <div id="create-account-section" class="form-container" style="display:none">
+      <h2>Create Account</h2>
+      <input type="text" id="username" placeholder="Username">
+      <input type="password" id="password" placeholder="Password">
+      <button onclick="createAccount()">Create Account</button>
+    </div>
+
+
+    
+    
+    <script>
+      function appendToDebugLog(text) {
+        const box = document.getElementById('debug-box');
+        const timestamp = new Date().toLocaleTimeString();
+        box.value += `[${timestamp}] ${text}\n`;
+        box.scrollTop = box.scrollHeight;  // Auto-scroll
+      }
+      
+      // Example usage
+      appendToDebugLog("Debug log initialized.");
+      
+      function getStats() {
+        const payload = {
+          request_type: "stats",
+          request_ip: "127.0.0.1"
+        };
+        fetch("http://localhost:5000/api/stats", {
+          
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("param_count").innerText = data.param_count;
+          document.getElementById("layer_count").innerText = data.layer_count;
+          document.getElementById("embed_size").innerText = data.embed_size;
+          document.getElementById("vocab_size").innerText = data.vocab_size;
+          document.getElementById("phase").innerText = data.phase;
+          document.getElementById("tokens_trained").innerText = data.tokens_trained;
+          document.getElementById("loss").innerText = data.loss;
+          document.getElementById("dtype").innerText = data.dtype;
+          document.getElementById("last_update").innerText = data.last_update;
+        })
+        .catch(err => {
+          const errMsg = document.createElement("div");
+          //appendToDebugLog("Failed fetching stats.")
+          document.getElementById("messages").appendChild(errMsg);
+        });
+      }
+      getStats();
+      setInterval(getStats, 5000);
+      appendToDebugLog("Updating stats - interval {5s}");
+      </script>
+
+<script>
+  let conversation_id = Date.now();
+  const conversationList = document.getElementById("conversation-list");
+  let loggedIn = false;
+  appendToDebugLog("a");
+  import { fetchEventSource } from 'https://cdn.jsdelivr.net/npm/@microsoft/fetch-event-source@2.0.1/+esm';
+  appendToDebugLog("b");
+  function sendMessage() {
+    const inputBox = document.getElementById("user-input");
+        const message = inputBox.value.trim();
+        if (!message) return;
+        
+        inputBox.value = "";
+
+        const userMsg = document.createElement("div");
+        userMsg.innerHTML = '<span style="color: cyan;">You: </span>' + message + "<p>\n\n</p>";
+        document.getElementById("messages").appendChild(userMsg);
+        
+        
+        const botMsg = document.createElement("div");
+        botMsg.innerHTML = '<span style="color: cyan;">Bot: </span><span id="bot-stream"></span>';
+        document.getElementById("messages").appendChild(botMsg);
+        appendToDebugLog("Div created");
+        
+        const payload = {
+          request_type: "chat",
+          prompt: message,
+          conversation_id: conversation_id,
+          request_ip: "127.0.0.1"
+        };
+        
+        try {
+          window.fetchEventSource('http://localhost:5000/api/chat/stream', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload),
+            onmessage(msg) {
+              appendToDebugLog("Token: " + msg.data);
+              document.getElementById("bot-stream").innerText += msg.data;
+            },
+            onerror(err) {
+              appendToDebugLog("Streaming error: " + err.message);
+            },
+          });
+        } catch (err) {
+          appendToDebugLog("Caught error: " + err.message);
+        }
+      }
+    
+      function newConversation() {
+        conversation_id = Date.now();
+        document.getElementById("messages").innerHTML = "";
+        const item = document.createElement("li");
+        item.className = "conversation-item";
+        item.innerText = `Conversation ${new Date(conversation_id).toLocaleTimeString()}`;
+        item.onclick = () => switchConversation(conversation_id);
+        conversationList.appendChild(item);
+      }
+
+      function switchConversation(id) {
+        conversation_id = id;
+        document.getElementById("messages").innerHTML = "";
+      }
+
+      function createAccount() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        console.log("Creating account for", username);
+        alert("Account creation is currently not functional.");
+      }
+
+      document.getElementById("account-link").addEventListener("click", function(e) {
+        e.preventDefault();
+        if (!loggedIn) {
+          window.location.hash = "#create-account";
+        }
+      });
+
+      window.addEventListener("hashchange", () => {
+        const hash = window.location.hash;
+        document.getElementById("chat-section").style.display = hash === "#chat" || hash === "" ? "flex" : "none";
+        document.getElementById("create-account-section").style.display = hash === "#create-account" ? "block" : "none";
+      });
+
+  </script>
+<script type="module">
+  import { fetchEventSource } from 'https://cdn.jsdelivr.net/npm/@microsoft/fetch-event-source@2.0.1/+esm';
+
+  const conversation_id = Date.now();
+
+  const inputBox = document.getElementById("user-input");
+  const messages = document.getElementById("messages");
+
+  document.querySelector("button").addEventListener("click", () => {
+    const message = inputBox.value.trim();
+    inputBox.value = "";
+
+    const userMsg = document.createElement("div");
+    userMsg.innerHTML = '<span style="color: cyan;">You: </span>' + message + "<p>\n\n</p>";
+    messages.appendChild(userMsg);
+
+    const botMsg = document.createElement("div");
+    botMsg.innerHTML = '<span style="color: cyan;">\nBot: </span><span id="bot-stream"></span>';
+    messages.appendChild(botMsg);
+
+    const payload = {
+      request_type: "chat",
+      prompt: message,
+      conversation_id,
+      request_ip: "127.0.0.1"
+    };
+
+    fetchEventSource("http://localhost:5000/api/chat/stream", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload),
+      onmessage(msg) {
+        document.getElementById("bot-stream").innerText += msg.data;
+      },
+      onerror(err) {
+        console.error("Streaming error:", err);
+        document.getElementById("bot-stream").innerText += " [Error]";
+      },
+    });
+  });
+</script>
+</body>
+</html>
