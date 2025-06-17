@@ -1,0 +1,5 @@
+name = "minimal-theme"
+license = "MIT"
+licenseURL = "https://opensource.org/licenses/MIT"
+description = "A minimal Hugo theme for blogging and projects"
+version = "0.1"

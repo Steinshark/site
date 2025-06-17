@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>{{ .Title }} - {{ .Site.Title }}</title>
+    <link rel="stylesheet" href="{{ "css/style.css" | relURL }}" />
+</head>
+<body>
+    <header>
+        <h1><a href="{{ "/" | relURL }}">{{ .Site.Title }}</a></h1>
+        <nav>
+            <a href="{{ "/" | relURL }}">Home</a> |
+            <a href="{{ "/blog/" | relURL }}">Blog</a>
+        </nav>
+        <hr/>
+    </header>
+
+    <main>
+        {{ block "main" . }}{{ end }}
+    </main>
+
+    <footer>
+        <hr/>
+        <p>© {{ now.Format "2006" }} Steinshark. All rights reserved.</p>
+    </footer>
+</body>
+</html>
