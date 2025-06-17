@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Steinshark Language Model Project</title>
+  <style>
+    :root {
+      --bg-dark: #121212;
+      --text-light: #e0e0e0;
+      --accent: linear-gradient(90deg, #00FFFF, #8A2BE2, #32CD32);
+      --button_color: linear-gradient(90deg, #00FFFF, #8A2BE2);
+      --panel-dark: #1e1e1e;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    header {
+      padding: 1rem;
+      background: var(--accent);
+      color: black;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav a {
+      color: black;
+      margin: 0 1rem;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .hero {
+      position: relative;
+      text-align: center;
+      background: url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
+      height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: white;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+    }
+
+    .content {
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+      line-height: 1.6;
+    }
+
+    .content h2 {
+      color: #00ffff;
+    }
+
+    .content p {
+      margin-bottom: 1.5rem;
+    }
+
+    .model-architecture {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 2rem 0;
+    }
+
+    .model-block {
+        background: #f8f9fa;
+        border: 2px solid #ccc;
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        margin: 0.5rem 0;
+        font-weight: bold;
+        width: 80%;
+        max-width: 500px;
+        text-align: center;
+        box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .arrow {
+        font-size: 1.5rem;
+        color: #777;
+        margin: 0.25rem 0;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div><strong>SLM Project</strong></div>
+    <nav>
+      <a href="./index.html">Home</a>
+      <a href="./story.html">Story</a>
+      <a href="./projects.html">Projects</a>
+      <a href="./chat.html">Chat</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h1>Welcome to the SLM Project</h1>
+    <p>My Finest Language Model Yet</p>
+  </div>
+
+  <div class="content">
+    <h2>Intro</h2>
+    <p>
+      Anyone remember <a href="https://www.cleverbot.com/?say=Hi">Cleverbot?</a> For a lot of us, this was our first intro to semi-intelligent autonomous chatting. Now I know the inner-workings behind it are nothing like an LLM - but it was an intriguing experience to engage with a non-human agent. That fascination persisted, and after I saw a few classmates playing with <a href="https://en.wikipedia.org/wiki/GPT-1">GPT,</a> I was hooked on the idea of making my own.  
+    </p>
+    <p>
+      At this point, no novel idea of mine will have the compute behind it to make the next ChatGPT, but I'd like to have some fun along the way and make something of substance at the very least. Enter SLM - the Steinshark Language Model. 
+    </p>
+
+    <h2>Phase 1 - Design an Architecture</h2>
+    <p>
+      Pytorch is a very familiar framework to me at this point. Countless hours have been spent building everything from <a href="https://github.com/Steinshark/chess">Chess Engines</a> to <a href="https://github.com/Steinshark/ReinforcementLearning">RL Snake-Playing agents.</a> The transformer architecture was a new one to me, though. I remember distinctly one morning on vacation sitting in the Aqua Aloha Surf hotel in Honolulu, non-chalantly parsing over <a href="https://arxiv.org/abs/1706.03762">Attention is All You Need.</a> Thus began the deep dive.
+    </p>
+    <p>
+      To understand the transformer mechanism, field advancements (RoPE, data/computation/training optimizations, etc...), and exactly what I could do with it took more time. Given my hardware limitations (RTX 4060Ti 16GB), I took to &lt;B parameter models. Months of toying around and optimizing compute, memory, and data requirments led me to the following model training as we speak:   
+    </p>
+
+    <h3>Model Architecture</h3>
+        <div class="model-architecture">
+        <div class="model-block">Token Embedding</div>
+        <div class="arrow">↓</div>
+        <div class="model-block">Positional + Semantic Embeddings</div>
+        <div class="arrow">↓</div>
+        <div class="model-block">N × Transformer Decoder Blocks</div>
+        <div class="arrow">↓</div>
+        <div class="model-block">Multi-Head Attention (MHA2)</div>
+        <div class="arrow">↓</div>
+        <div class="model-block">Feedforward Layers (2 × embed size)</div>
+        <div class="arrow">↓</div>
+        <div class="model-block">Final Linear Layer + Softmax</div>
+    </div>
+
+
+    <h2>What's next?</h2>
+    <p>
+      This site will serve as the hub for live chat demos, dev logs, project breakdowns, and long-form technical writeups. Stay tuned as the model evolves through new data phases, architecture iterations, and deployment stages.
+    </p>
+
+    <h2>Try the Chat Interface</h2>
+    <p>
+      Head over to the <a href="./chat.html" style="color: #32CD32; font-weight: bold;">Chat page</a> to interact with the current running version of the SLM. Real-time stats included.
+    </p>
+  </div>
+</body>
+</html>
