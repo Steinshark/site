@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SLM Chat - Story</title>
+  <style>
+    :root {
+      --bg-dark: #121212;
+      --text-light: #e0e0e0;
+      --accent: linear-gradient(90deg, #00FFFF, #8A2BE2, #32CD32);
+      --panel-dark: #1e1e1e;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    header {
+      padding: 1rem;
+      background: var(--accent);
+      color: black;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav a {
+      color: black;
+      margin: 0 1rem;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background-color: var(--panel-dark);
+      border-radius: 8px;
+    }
+
+    h1 {
+      background: var(--accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    a {
+      color: #00FFFF;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div><strong>SLM Chat</strong></div>
+    <nav>
+      <a href="./index.html">Chat</a>
+      <a href="./story.html">Story</a>
+      <a href="./login.html">Login</a>
+      <a href="./about.html">About</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>The Story Behind SLM Chat</h1>
+    <p>
+      This is a toy project designed to provide a functional interface to interact with custom Small Language Models (SLMs). It began as a lightweight experiment to explore local inference and custom chatbot interfaces.
+    </p>
+    <p>
+      While the interface and functionality are currently minimal, the intention is to improve it gradually. Over time, this project aims to serve as a foundation for more advanced features like long-term memory, multiple model routing, user authentication, and dynamic fine-tuning.
+    </p>
+    <p>
+      It’s a proof of concept: usable in its current state, but expect rough edges. Development will continue as time and interest permit.
+    </p>
+    <p>
+      Thank you for checking it out — and feel free to experiment or suggest improvements.
+    </p>
+  </div>
+</body>
+</html>
