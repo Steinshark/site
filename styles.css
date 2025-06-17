@@ -1,0 +1,12 @@
+/* Default link style */
+a {
+  color: #1e90ff; /* Dodger Blue */
+  text-decoration: none; /* optional: removes underline */
+  transition: color 0.2s ease; /* smooth hover transition */
+}
+
+/* Hover state */
+a:hover {
+  color: #ff6347; /* Tomato red */
+  text-decoration: underline; /* optional: adds underline on hover */
+}

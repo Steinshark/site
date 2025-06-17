@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" href="styles.css" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Steinshark Language Model Project</title>
@@ -65,7 +66,7 @@
       line-height: 1.6;
     }
 
-    .content h2 {
+    .content h2 { 
       color: #00ffff;
     }
 
@@ -78,6 +79,9 @@
         flex-direction: column;
         align-items: center;
         margin: 2rem 0;
+        /* border: 2px solid #ccc;
+        border-radius: 12px; */
+
     }
 
     .model-block {
@@ -94,10 +98,126 @@
     }
 
     .arrow {
-        font-size: 1.5rem;
+        font-size: 2.5rem;
         color: #777;
         margin: 0.25rem 0;
     }
+
+    .embedding-matrix {
+        padding: 1rem;
+        background-color: #e0f7fa;
+        border: 2px solid #4dd0e1;
+        border-radius: 16px;
+        box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+        width: fit-content;
+        margin: 1rem auto;
+    }
+
+    .embedding-title {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 0.75rem;
+        text-align: center;
+        color: #007c91;
+    }
+
+    .embedding-grid {
+        display: grid;
+        grid-template-columns: repeat(16, 1fr); /* n = 16 columns */
+        gap: 4px;
+    }
+
+    .embedding-grid-T {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* n = 16 columns */
+        gap: 4px;
+    }
+    .embedding-cell {
+        width: 16px;
+        height: 16px;
+        background-color: #4dd0e1;
+        border-radius: 4px;
+    }
+    .decoder-layer {
+        background-color: #f3f4f6;
+        border: 2px solid #cbd5e0;
+        border-radius: 16px;
+        padding: 1rem;
+        width: fit-content;
+        margin: 2rem auto;
+        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+        font-family: sans-serif;
+    }
+
+.layer-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: .9rem;
+  margin-bottom: 1rem;
+  color: #2c5282;
+}
+
+.layer-block {
+  background-color: #e2e8f0;
+  padding: 0.2rem 1rem;
+  border-radius: 8px;
+  margin: 0.2rem 0;
+  text-align: center;
+  font-size: 0.7rem;
+  color: #1a202c;
+}
+
+.layer-block.residual {
+  background-color: #c6f6d5;
+  font-weight: bold;
+  border: 1px dashed #38a169;
+}
+
+.transformer-stack {
+  border: 3px solid #81e6d9;
+  background-color: #edfdfd;
+  border-radius: 20px;
+  padding: 1rem;
+  margin: 2rem auto;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stack-title {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #319795;
+}
+
+.model-container {
+  position: relative;
+  border: 2px solid #4dd0e1;
+  border-radius: 16px;
+  padding: 2rem 1rem 1rem 1rem;
+  background-color: transparent;
+  margin: 2rem auto;
+  width: fit-content;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+
+  display: flex;              /* makes children layout horizontally */
+  flex-direction: row;        /* horizontal direction */
+  align-items: center;        /* vertical alignment center */
+  gap: 1.5rem;                /* spacing between items */
+}
+
+.model-label {
+  position: absolute;
+  top: -1rem;   /* moves label above the box */
+  left: 1rem;   /* align with box padding */
+  background-color: white; /* or match your page background */
+  padding: 0 0.5rem;
+  font-weight: bold;
+  color: #4dd0e1;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(77, 208, 225, 0.7);
+}
 
   </style>
 </head>
@@ -120,7 +240,7 @@
   <div class="content">
     <h2>Intro</h2>
     <p>
-      Anyone remember <a href="https://www.cleverbot.com/?say=Hi">Cleverbot?</a> For a lot of us, this was our first intro to semi-intelligent autonomous chatting. Now I know the inner-workings behind it are nothing like an LLM - but it was an intriguing experience to engage with a non-human agent. That fascination persisted, and after I saw a few classmates playing with <a href="https://en.wikipedia.org/wiki/GPT-1">GPT,</a> I was hooked on the idea of making my own.  
+      Anyone remember <a href="https://www.cleverbot.com/?say=Steinshark sent me!" target="_blank" rel="noopener noreferrer">Cleverbot?</a> For a lot of us, this was our first intro to semi-intelligent autonomous chatting. Now I know the inner-workings behind it are nothing like an LLM - but it was an intriguing experience to engage with a non-human agent. That fascination persisted, and after I saw a few classmates playing with <a href="https://en.wikipedia.org/wiki/GPT-1">GPT,</a> I was hooked on the idea of making my own.  
     </p>
     <p>
       At this point, no novel idea of mine will have the compute behind it to make the next ChatGPT, but I'd like to have some fun along the way and make something of substance at the very least. Enter SLM - the Steinshark Language Model. 
@@ -128,33 +248,156 @@
 
     <h2>Phase 1 - Design an Architecture</h2>
     <p>
-      Pytorch is a very familiar framework to me at this point. Countless hours have been spent building everything from <a href="https://github.com/Steinshark/chess">Chess Engines</a> to <a href="https://github.com/Steinshark/ReinforcementLearning">RL Snake-Playing agents.</a> The transformer architecture was a new one to me, though. I remember distinctly one morning on vacation sitting in the Aqua Aloha Surf hotel in Honolulu, non-chalantly parsing over <a href="https://arxiv.org/abs/1706.03762">Attention is All You Need.</a> Thus began the deep dive.
+      Pytorch is a very familiar framework to me at this point. Countless hours have been spent building everything from <a href="https://github.com/Steinshark/chess" target="_blank" rel="noopener noreferrer">Chess Engines</a> to <a href="https://github.com/Steinshark/ReinforcementLearning" target="_blank" rel="noopener noreferrer">RL Snake-Playing agents.</a> The transformer architecture was a new one to me, though. I remember distinctly one morning on vacation sitting in the Aqua Aloha Surf hotel in Honolulu, non-chalantly parsing over <a href="https://arxiv.org/abs/1706.03762">Attention is All You Need.</a> Thus began the deep dive.
     </p>
     <p>
-      To understand the transformer mechanism, field advancements (RoPE, data/computation/training optimizations, etc...), and exactly what I could do with it took more time. Given my hardware limitations (RTX 4060Ti 16GB), I took to &lt;B parameter models. Months of toying around and optimizing compute, memory, and data requirments led me to the following model training as we speak:   
+      To understand the transformer mechanism, field advancements (RoPE, data/computation/training optimizations, etc...), and exactly what I could do with it took more time. Given my hardware limitations (RTX 4060Ti 16GB), I took to &lt;1B parameter models. Months of toying around and optimizing compute, memory, and data requirments led me to the following model training as we speak:   
     </p>
 
-    <h3>Model Architecture</h3>
-        <div class="model-architecture">
-        <div class="model-block">Token Embedding</div>
-        <div class="arrow">↓</div>
-        <div class="model-block">Positional + Semantic Embeddings</div>
-        <div class="arrow">↓</div>
-        <div class="model-block">N × Transformer Decoder Blocks</div>
-        <div class="arrow">↓</div>
-        <div class="model-block">Multi-Head Attention (MHA2)</div>
-        <div class="arrow">↓</div>
-        <div class="model-block">Feedforward Layers (2 × embed size)</div>
-        <div class="arrow">↓</div>
-        <div class="model-block">Final Linear Layer + Softmax</div>
+    <div class="model-container">
+        <div class="model-label">Steinshark LM</div>
+            <div class="embedding-matrix">
+                <div class="embedding-title">Embedding Layer (32768 x 1280)</div>
+                <div class="embedding-grid">
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                </div>
+            </div>
+
+       
+            <div class="arrow">&#8594;</div>
+        
+            <div class="transformer-stack">
+                <div class="stack-title">Stacked Transformer Decoder (×16)</div>
+
+                <!-- Repeat this block 16 times for each decoder layer -->
+                <div class="decoder-layer">
+                    <div class="layer-title">Decoder Layer 1</div>
+                    <div class="layer-block">LayerNorm</div>
+                    <div class="layer-block">Multi-Head Attention</div>
+                    <div class="layer-block">Dropout</div>
+                    <div class="layer-block residual">+ Residual</div>
+                    <div class="layer-block">LayerNorm</div>
+                    <div class="layer-block">Feedforward</div>
+                    <div class="layer-block">Dropout</div>
+                    <div class="layer-block residual">+ Residual</div>
+                </div>
+
+                <!-- Add more decoder-layer blocks as needed -->
+            </div>
+
+            <div class="arrow">&#8594;</div>
+            
+            <div class="embedding-matrix">
+                <div class="embedding-title">LM Head</div>
+                <div class="embedding-grid-T">
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                </div>
+            </div>
+
     </div>
 
 
-    <h2>What's next?</h2>
     <p>
-      This site will serve as the hub for live chat demos, dev logs, project breakdowns, and long-form technical writeups. Stay tuned as the model evolves through new data phases, architecture iterations, and deployment stages.
+      With this model we're off to the races! With weights sharing of the embeddings, we are down to 356M parameters. RoPE embeddings are nice to have (no position embeddings needed), and a head dimension of 256 makes for quick but effective training. Not big, but definitely capable of something! </p>
     </p>
+    <p>
+        The model is currently in Pre-Training phase on a <a href="https://cloud.lambda.ai/" target="_blank" rel="noopener noreferrer">Lambda AI</a> cloud instance of a GH200 GPU. 12 billion tokens later and loss is at 4.02183. Stay tuned as we enter later phases, thanks for reading! - Steinshark 
 
+    </p>
     <h2>Try the Chat Interface</h2>
     <p>
       Head over to the <a href="./chat.html" style="color: #32CD32; font-weight: bold;">Chat page</a> to interact with the current running version of the SLM. Real-time stats included.
