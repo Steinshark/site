@@ -359,7 +359,10 @@
                 For training I grabbed a 120GB subset of the 51.3TB total and got to work.
             </p>
             <p>
-                Copy-pasting a dataset just didn't fit the vibe of this project, though, so I went a head and filtered it further. I took the adult-content out, removed a good number of ads and spam articles, removed short articles, and filtered out anything with a language score of under .95. This chopped the data down to __GB. 
+                Copy-pasting a dataset just didn't fit the vibe of this project, though, so I went ahead and filtered it further. I took the adult-content out, removed a good number of ads and spam, removed short articles, and filtered out anything with a language score of under .95. This chopped the data down to 94GB. 
+                Next, I curated a huge list of whitelist phrases, topics, and genres to include in the dataset. This led to a massive reduction, around 15-20% of the first pass text.
+                </p>
+            <p>
                 The key here is that every bit of noise we take out programmatically is noise the model doesn't have to dedicate parameters to for filtering while training.
             </p>
         </div>
@@ -380,13 +383,13 @@
             <div class="arrow">&#8594;</div>
         
             <div class="embedding-matrix">
-                <div class="embedding-title">Remove Bad Content (88.8GB)</div>
+                <div class="embedding-title">Remove Bad Content (94.8GB)</div>
             </div>
 
             <div class="arrow">&#8594;</div>
             
             <div class="embedding-matrix">
-                <div class="embedding-title">Whitelist Content (__GB)</div>
+                <div class="embedding-title">Whitelist Content (19GB)</div>
             </div>
 
             <div class="arrow">&#8594;</div>
