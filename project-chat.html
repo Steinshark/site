@@ -83,6 +83,22 @@
       margin-bottom: 1.5rem;
     }
 
+    .image-box {
+    display: inline-block;
+    padding: 6px;
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    width: fit-content;
+    }
+
+    .image-box img {
+    border-radius: 8px;
+    display: block;
+    max-width: 100%;
+    height: auto;
+    }
     .model-architecture {
         display: flex;
         flex-direction: column;
@@ -184,7 +200,7 @@
 
 .transformer-stack {
   border: 3px solid #81e6d9;
-  background-color: #edfdfd;
+  background-color: #e0f7fa;
   border-radius: 20px;
   padding: 1rem;
   margin: 2rem auto;
@@ -196,7 +212,7 @@
   font-size: 1rem;
   font-weight: bold;
   margin-bottom: 1.5rem;
-  color: #319795;
+  color: #007c91;
 }
 
 .model-container {
@@ -227,6 +243,73 @@
   border-radius: 8px;
   box-shadow: 0 0 5px rgba(77, 208, 225, 0.7);
 }
+.two-column {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: flex-start;
+  margin: 2rem 0;
+}
+
+.column-text, .column-image {
+  flex: 1 1 45%;
+}
+
+.column-text {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.column-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+}
+
+.image-caption {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+.param-box {
+  border: 2px solid #4dd0e1;
+  background-color: #e0f7fa;
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  width: fit-content;
+  margin: 1rem auto;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+}
+
+.param-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  text-align: center;
+  color: #007c91;
+}
+
+.param-grid {
+  display: grid;
+  grid-template-columns: auto auto auto auto; /* Two key-value pairs per row */
+  gap: 0.5rem 1.5rem;
+}
+
+.param-key {
+  font-weight: 600;
+  color: #1565c0;
+  white-space: nowrap;
+}
+
+.param-value {
+  font-family: monospace;
+  color: #1e88e5;
+}
+
+
 
   </style>
 </head>
@@ -247,20 +330,85 @@
   </div>
 
   <div class="content">
+
+
     <h2>Intro</h2>
     <p>
-      Anyone remember <a href="https://www.cleverbot.com/?say=Steinshark sent me!" target="_blank" rel="noopener noreferrer">Cleverbot?</a> For a lot of us, this was our first intro to semi-intelligent autonomous chatting. Now I know the inner-workings behind it are nothing like an LLM - but it was an intriguing experience to engage with a non-human agent. That fascination persisted, and after I saw a few classmates playing with <a href="https://en.wikipedia.org/wiki/GPT-1">GPT,</a> I was hooked on the idea of making my own.  
+      Anyone remember <a href="https://www.cleverbot.com/?say=Steinshark sent me!" target="_blank" rel="noopener noreferrer">Cleverbot</a>? For a lot of us, this was our first intro to semi-intelligent autonomous chatting. 
+      Now I know the inner-workings behind it are nothing like an LLM - but it was an intriguing experience to engage with a non-human agent. 
+      That fascination persisted, and after I saw a few classmates playing with <a href="https://en.wikipedia.org/wiki/GPT-1" target="_blank" rel="noopener noreferrer">GPT-1</a> for their NLP class, I was hooked on the idea of making my own.  
     </p>
     <p>
       At this point, no novel idea of mine will have the compute behind it to make the next ChatGPT, but I'd like to have some fun along the way and make something of substance at the very least. Enter SLM - the Steinshark Language Model. 
     </p>
 
-    <h2>Phase 1 - Design an Architecture</h2>
+    <div class="image-box">
+        <img src="images/datacenter-thin.jpg" alt="Project Preview">
+    </div>
+
+    <h2>Phase 1 - Curate the Data</h2>
     <p>
-      Pytorch is a very familiar framework to me at this point. Countless hours have been spent building everything from <a href="https://github.com/Steinshark/chess" target="_blank" rel="noopener noreferrer">Chess Engines</a> to <a href="https://github.com/Steinshark/ReinforcementLearning" target="_blank" rel="noopener noreferrer">RL Snake-Playing agents.</a> The transformer architecture was a new one to me, though. I remember distinctly one morning on vacation sitting in the Aqua Aloha Surf hotel in Honolulu, non-chalantly parsing over <a href="https://arxiv.org/abs/1706.03762">Attention is All You Need.</a> Thus began the deep dive.
+      Data is a lucrative field these days. To be sure, there is plenty of free data out there. The <a href="https://commoncrawl.org/" target="_blank" rel="noopener noreferrer">Common Crawl</a> is the entire internet - for free. 
+      They even cleaned up the html to give you the text underneath! But the problem with this data is noise.  And there is plenty of noise on the internet... 
+    </p>
+
+    <div class="two-column">
+        <div class="column-text">
+            <p>
+                I could have spent days designing a filter to get higher quality data (and I tried that a few weeks ago). However, <a href="https://huggingface.co/datasets/HuggingFaceFW/fineweb" target="_blank" rel="noopener noreferrer">FineWeb</a>, a wonderful collection of highly curated English language web pages did an even better job for me. 
+                For training I grabbed a 100GB subset of the 51.3TB total and got to work.
+            </p>
+            <p>
+                Copy-pasting a dataset just didn't fit the vibe of this project, though, so I went a head and filtered it further. I took the adult-content out, removed a good number of ads and spam articles, removed short articles, and filtered out anything with a language score of under .95. This chopped the data down to __GB. 
+                The key here is that every bit of noise we take out programmatically is noise the model doesn't have to dedicate parameters to for filtering while training.
+            </p>
+        </div>
+
+        <div class="column-image">
+            <img src="images/webstats.jpeg" alt="Infographic showing internet data usage" />
+            <p class="image-caption">Over 500,000 GB of data is created online every minute.</p>
+        </div>
+    </div>
+
+    <div class="model-container">
+        <div class="model-label">Data Pipeline</div>
+            <div class="embedding-matrix">
+                <div class="embedding-title">FineWeb (102GB)</div>
+            </div>
+
+       
+            <div class="arrow">&#8594;</div>
+        
+            <div class="embedding-matrix">
+                <div class="embedding-title">Remove Bad Content (88.8GB)</div>
+            </div>
+
+            <div class="arrow">&#8594;</div>
+            
+            <div class="embedding-matrix">
+                <div class="embedding-title">Whitelist Content (__GB)</div>
+            </div>
+
+            <div class="arrow">&#8594;</div>
+
+            <div class="embedding-matrix">
+                <div class="embedding-title">Tokenize to 32k tokens</div>
+            </div>
+
+    </div>
+
+
+
+
+    <h2>Phase 2 - Design an Architecture</h2>
+    <p>
+      Pytorch is a very familiar framework to me at this point. Countless hours have been spent building everything from <a href="https://github.com/Steinshark/chess" target="_blank" rel="noopener noreferrer">Chess Engines</a> to <a href="https://github.com/Steinshark/ReinforcementLearning" target="_blank" rel="noopener noreferrer">RL Snake-Playing agents</a>. 
+      The transformer architecture was a new one to me, though. I remember distinctly one morning on vacation sitting in the Aqua Aloha Surf hotel in Honolulu, non-chalantly parsing over <a href="https://arxiv.org/abs/1706.03762">Attention is All You Need</a>. 
+      Thus began the deep dive.
     </p>
     <p>
-      To understand the transformer mechanism, field advancements (RoPE, data/computation/training optimizations, etc...), and exactly what I could do with it took more time. Given my hardware limitations (RTX 4060Ti 16GB), I took to &lt;1B parameter models. Months of toying around and optimizing compute, memory, and data requirments led me to the following model training as we speak:   
+      To understand the transformer mechanism, field advancements (RoPE, data/computation/training optimizations, etc...), and exactly what I could do with it took more time. Given my hardware limitations (RTX 4060Ti 16GB), I took to &lt;1B parameter models. 
+      Months of toying around and optimizing compute, memory, and data requirments led me to the following model training as we speak:   
     </p>
 
     <div class="model-container">
@@ -399,18 +547,48 @@
 
     </div>
 
+    <div class="param-box">
+    <h3 class="param-title">Model Parameters</h3>
+    <div class="param-grid">
+
+        <div class="param-key">Vocab Size:</div>
+        <div class="param-value">32768</div>
+
+        <div class="param-key">Number heads:</div>
+        <div class="param-value">5</div>
+
+        <div class="param-key">Embed Dims:</div>
+        <div class="param-value">1280</div>
+
+        <div class="param-key">Num Layers:</div>
+        <div class="param-value">10</div>
+
+        <div class="param-key">FF Size:</div>
+        <div class="param-value">5120</div>
+
+        <div class="param-key">Context Len:</div>
+        <div class="param-value">1024</div>
+    </div>
+    
+</div>
+
 
     <p>
-      With this model we're off to the races! With weights sharing of the embeddings, we are down to 356M parameters. RoPE embeddings are nice to have (no position embeddings needed), and a head dimension of 256 makes for quick but effective training. Not big, but definitely capable of something! </p>
+      With this model we're off to the races! With the LM head weight-sharing with the embeddings, we are down to 356M parameters. RoPE embeddings are nice to have (no position embeddings needed), and a head dimension of 256 makes for quick but effective training. Not big, but definitely capable of something! </p>
     </p>
+
+    <h2>Check Back in Tomorrow for More!</h2>
     <p>
+      Updates daily on the project! I code as much as I can after work (well into the night, its unhealthy...) to get updates to you. Thanks for reading so far!
+    </p>
+    <!-- <p>
         The model is currently in Pre-Training phase on a <a href="https://cloud.lambda.ai/" target="_blank" rel="noopener noreferrer">Lambda AI</a> cloud instance of a GH200 GPU. 12 billion tokens later and loss is at 4.02183. Stay tuned as we enter later phases, thanks for reading! - Steinshark 
 
     </p>
     <h2>Try the Chat Interface</h2>
     <p>
       Head over to the <a href="./chat.html" style="color: #32CD32; font-weight: bold;">Chat page</a> to interact with the current running version of the SLM. Real-time stats included.
-    </p>
+    </p> -->
   </div>
 </body>
 </html>
