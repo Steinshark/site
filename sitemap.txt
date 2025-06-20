@@ -1,1 +1,9 @@
 https://Steinshark.github.io/site/index.html
+https://Steinshark.github.io/site/index.html
+https://Steinshark.github.io/site/projects.html
+https://Steinshark.github.io/site/story.html
+https://Steinshark.github.io/site/login.html
+https://Steinshark.github.io/site/chat.html
+
+https://Steinshark.github.io/site/projects-chat.html
+https://Steinshark.github.io/site/projects-chess.html
