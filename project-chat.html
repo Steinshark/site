@@ -356,10 +356,10 @@
         <div class="column-text">
             <p>
                 I could have spent days designing a filter to get higher quality data (and I tried that a few weeks ago). However, <a href="https://huggingface.co/datasets/HuggingFaceFW/fineweb" target="_blank" rel="noopener noreferrer">FineWeb</a>, a wonderful collection of highly curated English language web pages did an even better job for me. 
-                For training I grabbed a 120GB subset of the 51.3TB total and got to work.
+                For training I grabbed a 155GB subset of the 51.3TB total and got to work.
             </p>
             <p>
-                Copy-pasting a dataset just didn't fit the vibe of this project, though, so I went ahead and filtered it further. I took the adult-content out, removed a good number of ads and spam, removed short articles, and filtered out anything with a language score of under .95. This chopped the data down to 94GB. 
+                Copy-pasting a dataset just didn't fit the vibe of this project, though, so I went ahead and filtered it further. I took the adult-content out, removed a good number of ads and spam, removed short articles, and filtered out anything with a language score of under .95. This chopped the data down to 66GB. 
                 Next, I curated a huge list of whitelist phrases, topics, and genres to include in the dataset. This led to a massive reduction, around 15-20% of the first pass text.
                 </p>
             <p>
@@ -376,20 +376,20 @@
     <div class="model-container">
         <div class="model-label">Data Pipeline</div>
             <div class="embedding-matrix">
-                <div class="embedding-title">FineWeb (120GB)</div>
+                <div class="embedding-title">FineWeb (155GB)</div>
             </div>
 
        
             <div class="arrow">&#8594;</div>
         
             <div class="embedding-matrix">
-                <div class="embedding-title">Remove Bad Content (94.8GB)</div>
+                <div class="embedding-title">Remove Bad Content (124GB)</div>
             </div>
 
             <div class="arrow">&#8594;</div>
             
             <div class="embedding-matrix">
-                <div class="embedding-title">Whitelist Content (19GB)</div>
+                <div class="embedding-title">Select Good Content (21GB)</div>
             </div>
 
             <div class="arrow">&#8594;</div>
