@@ -10,46 +10,13 @@
 
     gtag('config', 'G-49NV8NMBJP');
     </script>
+  
   <link rel="stylesheet" href="styles.css" />
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Projects – Steinshark</title>
+  <title>Projects - Steinshark</title>
   <style>
-
-    
-    :root {
-      --bg-dark: #121212;
-      --text-light: #e0e0e0;
-      --accent: linear-gradient(90deg, #00FFFF, #8A2BE2, #32CD32);
-      --panel-dark: #1e1e1e;
-      --card-bg: #1a1a1a;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--text-light);
-    }
-
-    header {
-      padding: 1rem;
-      background: var(--accent);
-      color: black;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    nav a {
-      color: black;
-      margin: 0 1rem;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
     main {
       max-width: 1200px;
       margin: 2rem auto;
@@ -58,7 +25,7 @@
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 2rem;
     }
-
+  
     .project-card {
       background-color: var(--card-bg);
       border-radius: 16px;
@@ -68,50 +35,41 @@
       flex-direction: column;
       transition: transform 0.2s;
     }
-
+  
     .project-card:hover {
       transform: scale(1.02);
     }
-
+  
     .project-image {
       width: 100%;
       height: 180px;
       object-fit: cover;
       background-color: #2c2c2c;
     }
-
+  
     .project-content {
       padding: 1rem;
       flex-grow: 1;
     }
-
+  
     .project-title {
       font-size: 1.5rem;
       margin: 0.5rem 0;
     }
-
+  
     .project-desc {
       font-size: 0.95rem;
       line-height: 1.5;
       color: #ccc;
     }
-
-    .project-link {
-      margin-top: 1rem;
-      padding: 0.5rem 1rem;
-      background: var(--accent);
-      color: black;
-      font-weight: bold;
-      text-align: center;
-      border-radius: 8px;
-      text-decoration: none;
-      display: inline-block;
-    }
   </style>
+  
+  </head>
 </head>
 <body>
 
   <header>
+    <div class="code-stream"></div>
     <div><strong>Steinshark Projects</strong></div>
     <nav>
       <a href="./index.html">Home</a>
@@ -130,12 +88,13 @@
         <p class="project-desc">
           A custom-built language model from scratch in PyTorch, featuring model parallelism, token streaming, live UI, and a fully interactive backend served over HTTP. Designed to run locally and trained on a clean dataset curated for high signal-to-noise ratio.
         </p>
-        <a href="./project-chat.html" class="project-link">View Project</a>
+        <a href="./project-chat.html" class="button">View Project</a>
       </div>
     </div>
 
     <!-- Future project cards can be added below using the same structure -->
 
   </main>
+  <script src="codeflow.js"></script>
 </body>
 </html>

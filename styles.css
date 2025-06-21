@@ -1,12 +1,179 @@
-/* Default link style */
-a {
-  color: #1e90ff; /* Dodger Blue */
-  text-decoration: none; /* optional: removes underline */
-  transition: color 0.2s ease; /* smooth hover transition */
+:root {
+  --bg-dark: #121212;
+  --text-light: #e0e0e0;
+  --button-color: linear-gradient(90deg, #00c3ff, #a5d3f8);
+  --panel-dark: #3e494b;
+  --card-bg: #1a1a1a;
 }
 
-/* Hover state */
-a:hover {
-  color: #ff6347; /* Tomato red */
-  text-decoration: underline; /* optional: adds underline on hover */
+/* Base layout */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
 }
+
+nav a {
+  color: black;
+  margin: 0 1rem;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Main content layout */
+main {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+/* Link style */
+a {
+  color: #1e90ff;
+  text-decoration: none;
+  font-weight: bold;
+  position: relative;        /* needed for ::after positioning */
+  transition: color 0.2s ease;
+}
+
+/* Create the underline with ::after */
+a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;               /* thickness of underline */
+  bottom: 0;
+  left: 0;
+  background-color: #0969c9; /* underline color */
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+
+/* Animate the underline on hover */
+a:hover {
+  color: #0969c9;
+}
+
+a:hover::after {
+  width: 100%;
+}
+
+
+/* Button styling */
+.button {
+  background: var(--button-color);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  display: inline-block;
+  text-decoration: none !important; /* force no underline */
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  position: relative;  /* if you used ::after underline on links, disable for button */
+}
+
+.button:hover {
+  background: linear-gradient(90deg, #a5d3f8, #00c3ff);
+  text-decoration: none !important; /* force no underline on hover */
+}
+
+.button::after {
+  content: none !important; /* disable underline animation if added via ::after */
+}
+
+/* Content section */
+.content {
+  padding: 2rem;
+  max-width: 900px;
+  margin: auto;
+  line-height: 1.6;
+}
+
+.content h2 {
+  color: #00ffff;
+}
+
+.content p {
+  margin-bottom: 1.5rem;
+}
+
+/* Header */
+
+/* CODE PANEL */
+.code-stream {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 75px; /* half of 150px */
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: black;
+  filter: blur(0.6px);
+}
+
+.code-line {
+  position: absolute;   /* vital to .js file positioning working */
+  white-space: pre;
+  opacity: 0;
+}
+
+header > *:not(.code-stream) {
+  position: relative;
+  z-index: 2;
+}
+
+/* Header should have room for the effect */
+header {
+  position: relative;
+  overflow: hidden;
+  height: 75px;
+  padding: 0.5rem 1rem;
+
+  display: flex;               /* horizontal layout */
+  flex-direction: row;         /* explicitly row */
+  justify-content: space-between; /* title left, nav right */
+  align-items: center;         /* vertical center */
+
+  background: linear-gradient(90deg, #00FFFF, #7d85f8, #32CD32);
+  background-size: 300% 300%;
+  animation: ripple 20s linear infinite;
+  z-index: 1;
+}
+
+header > div strong {
+  color: black;  /* title text black */
+}
+
+header nav {
+  margin-left: 0; /* remove margin-left:auto, no longer needed */
+}
+
+
+@keyframes ripple {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes fadeOut {
+  0%   { opacity: 0; }
+  10%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.token.keyword   { color: #1a73e8; font-weight: bold; }
+.token.function  { color: #b037dc; }
+.token.string    { color: #22863a; }
+.token.comment   { color: #6a737d; font-style: italic; }
+.token.number    { color: #d73a49; }
