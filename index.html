@@ -1,53 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-49NV8NMBJP"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-49NV8NMBJP"></script>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-    gtag('config', 'G-49NV8NMBJP');
-    </script>
+  gtag('config', 'G-49NV8NMBJP');
+  </script>
 
   <link rel="stylesheet" href="styles.css" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Steinshark Language Model Project</title>
   <style>
-    :root {
-      --bg-dark: #121212;
-      --text-light: #e0e0e0;
-      --accent: linear-gradient(90deg, #00FFFF, #8A2BE2, #32CD32);
-      --button_color: linear-gradient(90deg, #00FFFF, #8A2BE2);
-      --panel-dark: #1e1e1e;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--text-light);
-    }
-
-    header {
-      padding: 1rem;
-      background: var(--accent);
-      color: black;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    nav a {
-      color: black;
-      margin: 0 1rem;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
     .hero {
       position: relative;
       text-align: center;
@@ -68,21 +36,6 @@
     .hero p {
       font-size: 1.25rem;
     }
-
-    .content {
-      padding: 2rem;
-      max-width: 900px;
-      margin: auto;
-      line-height: 1.6;
-    }
-
-    .content h2 {
-      color: #00ffff;
-    }
-
-    .content p {
-      margin-bottom: 1.5rem;
-    }
   </style>
 </head>
 <body>
@@ -94,6 +47,7 @@
       <a href="./projects.html">Projects</a>
       <a href="./chat.html">Chat</a>
     </nav>
+    <div class="code-stream"></div>
   </header>
 
   <div class="hero">
@@ -109,7 +63,7 @@
 
     <h2>What's happening now?</h2>
     <p>
-      My current project is a small language model built in-house. Not quite from the ground up, but the Pytorch code goes down to the Linear layers, GELU activations, and matrix multiplications to implement weight sharing. It's not the most in-depth codebase. It's not the best performing model. But its mine! And it's a project you can absolutely do as well. Check out the current progress <a href="./project-chat.html" style="color: #32CD32; font-weight: bold;">here.</a></p>
+      My current project is a small language model built in-house. Not quite from the ground up, but the Pytorch code goes down to the Linear layers, GELU activations, and matrix multiplications to implement weight sharing. It's not the most in-depth codebase. It's not the best performing model. But its mine! And it's a project you can absolutely do as well. Check out the current progress <a href="./project-chat.html">here.</a></p>
     </p>
 
     <h2>What you'll find?</h2>
@@ -124,8 +78,9 @@
 
     <h2>Try the Chat Interface</h2>
     <p>
-      Head over to the <a href="./chat.html" style="color: #32CD32; font-weight: bold;">Chat page</a> to interact with the current running version of the SLM. Real-time stats included.
+      Head over to the <a href="./chat.html">Chat page</a> to interact with the current running version of the SLM. Real-time stats included.
     </p>
   </div>
+  <script src="codeflow.js"></script>
 </body>
 </html>
