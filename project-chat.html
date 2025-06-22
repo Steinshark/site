@@ -10,6 +10,8 @@
   gtag('config', 'G-49NV8NMBJP');
   </script>
 
+
+
   <link rel="stylesheet" href="styles.css" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -301,34 +303,49 @@
     <h2>Phase 1 - Curate the Data</h2>
     <p>
       Data is a lucrative field these days. To be sure, there is plenty of free data out there. The <a href="https://commoncrawl.org/" target="_blank" rel="noopener noreferrer">Common Crawl</a> is the entire internet - for free. 
-      They even cleaned up the html to give you the text underneath! But the problem with this data is noise.  And there is plenty of noise on the internet... 
+      They even cleaned up the html to give you the text underneath! But the problem with this data is noise. And there is plenty of noise on the internet... 
+      High quality data is what we're really searching for. And to train a decent model, we need a lot of it. 
+    </p>
+
+    <p>
+      GPT-1, for starters, was trained on 4.7GB of data - around 1 billion words. That much text would take 11 years to read. And it wasn't even close to enough data for a capable model.
+      GPT-2 upped the game to 40GB of text, this time from <a href="https://www.reddit.com/r/rickroll/" target="_blank" rel="noopener noreferrer">Reddit Posts</a>.
+      The first recognizably modern model, GPT-3, brought this up to 570GB, 300B tokens, and around 15,000,000 man-hours of reading. 
+    </p>
+
+    <p>
+        To train even a semi-competent model, the scale of data will be huge. So, how did I tackle this? Lets find out...
     </p>
 
     <div class="two-column">
         <div class="column-text">
             <p>
-                I could have spent days designing a filter to get higher quality data (and I tried that a few weeks ago). However, <a href="https://huggingface.co/datasets/HuggingFaceFW/fineweb" target="_blank" rel="noopener noreferrer">FineWeb</a>, a wonderful collection of highly curated English language web pages did an even better job for me. 
-                For training I grabbed a 200GB subset of the 51.3TB total and got to work.
+                Free, big, easy, and clean is the "choose only 3" setup for data. At first, I left out fast. Weeks were spent downloading Common Crawl pages, adjusting my filter, finding something I missed, and reapeating.
+                Eventually, I gave up on the autonomy and went crawling to <a href="https://huggingface.co/datasets/HuggingFaceFW/fineweb" target="_blank" rel="noopener noreferrer">FineWeb</a>, a wonderful collection of highly curated English language web pages that did an even better job. 
+                For training I grabbed a 250GB subset of the 51.3TB available and got to work.
             </p>
+
             <p>
-                Copy-pasting a dataset just didn't fit the vibe of this project, though, so I went ahead and filtered it further. I took the adult-content out, removed a good number of ads and spam, removed short articles, and filtered out anything with a language score of under .95. This chopped the data down to 88GB. 
-                Next, I curated a huge list of whitelist phrases, topics, and genres to include in the dataset. This led to a massive reduction, around 15-20% of the first pass text.
-                </p>
-            <p>
-                The key here is that every bit of noise we take out programmatically is noise the model doesn't have to dedicate parameters to for filtering while training.
+                Copy-pasting a dataset just didn't fit the vibe of this project,so I went ahead and filtered it further. I took out adult, ad and spam content, filtered short articles, and tossed out anything with a language score of under .95. This chopped the data down to 88GB. 
+                Next, I curated a huge list of whitelist phrases, topics, and genres to include in the final dataset. This led to a massive reduction, around 15-20% of the first pass text.
             </p>
         </div>
-
+        
         <div class="column-image">
             <img src="images/webstats.jpeg" alt="Infographic showing internet data usage" />
             <p class="image-caption">Over 500,000 GB of data is created online every minute.</p>
         </div>
     </div>
 
+    <p>
+        The key here is that every bit of noise we take out programmatically is noise the model doesn't have to waste parameters on to filter out. Was the weeks-long data curation process worth it? Who knows! 
+        Lesson learned about pre-mature optimization, I guess. 
+    </p>
+
     <div class="model-container">
         <div class="model-label">Data Pipeline</div>
             <div class="embedding-matrix">
-                <div class="embedding-title">FineWeb (200GB)</div>
+                <div class="embedding-title">FineWeb (250GB)</div>
             </div>
 
        
@@ -341,35 +358,46 @@
             <div class="arrow">&#8594;</div>
             
             <div class="embedding-matrix">
-                <div class="embedding-title">Choose Good Content (24.6GB)</div>
+                <div class="embedding-title">Select Good Content (24.6GB)</div>
             </div>
 
             <div class="arrow">&#8594;</div>
 
             <div class="embedding-matrix">
-                <div class="embedding-title">Tokenize to 32k tokens</div>
+                <div class="embedding-title">Tokenize to 32k Vocab</div>
+            </div>
+
+            <div class="arrow">&#8594;</div>
+
+            <div class="model-container">
+                <div class="model-label">Final Set</div>
+    
+                    <div class="embedding-matrix">
+                        <div class="embedding-title">10B tokens</div>
+                    </div>
+        
             </div>
 
     </div>
 
 
-
-
     <h2>Phase 2 - Design an Architecture</h2>
     <p>
       Pytorch is a very familiar framework to me at this point. Countless hours have been spent building everything from <a href="https://github.com/Steinshark/chess" target="_blank" rel="noopener noreferrer">Chess Engines</a> to <a href="https://github.com/Steinshark/ReinforcementLearning" target="_blank" rel="noopener noreferrer">RL Snake-Playing agents</a>. 
-      The transformer architecture was a new one to me, though. I remember distinctly one morning on vacation sitting in the Aqua Aloha Surf hotel in Honolulu, non-chalantly parsing over <a href="https://arxiv.org/abs/1706.03762">Attention is All You Need</a>. 
-      Thus began the deep dive.
+      The transformer architecture was a new one to me, though. I remember distinctly one morning on vacation sitting in the Aqua Aloha Surf hotel in Honolulu, non-chalantly parsing over <a href="https://arxiv.org/abs/1706.03762">Attention is All You Need</a> - as one does. 
+      Thus began my deep dive into transformer-based langauge models.
     </p>
+
     <p>
-      To understand the transformer mechanism, field advancements (RoPE, data/computation/training optimizations, etc...), and exactly what I could do with it took more time. Given my hardware limitations (RTX 4060Ti 16GB), I took to &lt;1B parameter models. 
+      To understand the transformer mechanism, field advancements (RoPE, data/computation/training optimizations, etc...), and exactly what I could do with it took more time. 
+      Given my hardware limitations (RTX 4060Ti 16GB), I took to &le;1B parameter models. 
       Months of toying around and optimizing compute, memory, and data requirments led me to the following model training as we speak:   
     </p>
 
     <div class="model-container">
         <div class="model-label">Steinshark LM</div>
             <div class="embedding-matrix">
-                <div class="embedding-title">Embedding Layer (32768 x 1280)</div>
+                <div class="embedding-title">Embedding Layer (<span id="n-vocab1"></span> x <span id="n-embed1"></span>)</div>
                 <div class="embedding-grid">
                     <div class="embedding-cell"></div>
                     <div class="embedding-cell"></div>
@@ -426,11 +454,11 @@
             <div class="arrow">&#8594;</div>
         
             <div class="transformer-stack">
-                <div class="stack-title">Stacked Transformer Decoder (×16)</div>
+                <div class="stack-title">Stacked Transformer Decoder (<span id="n-layers1"></span>)</div>
 
                 <!-- Repeat this block 16 times for each decoder layer -->
                 <div class="decoder-layer">
-                    <div class="layer-title">Decoder Layer 1</div>
+                    <div class="layer-title">Decoder Layer</div>
                     <div class="layer-block">LayerNorm</div>
                     <div class="layer-block">Multi-Head Attention</div>
                     <div class="layer-block">Dropout</div>
@@ -503,48 +531,57 @@
     </div>
 
     <div class="param-box">
-    <h3 class="param-title">Model Parameters</h3>
+    <h3 class="param-title">Model Parameters - <span id="param-count1"></span></h3>
     <div class="param-grid">
 
         <div class="param-key">Vocab Size:</div>
-        <div class="param-value">32768</div>
+        <div class="param-value"><span id="n-vocab2"></span></div>
 
         <div class="param-key">Number heads:</div>
-        <div class="param-value">5</div>
+        <div class="param-value"><span id="n-heads1"></span></div>
 
         <div class="param-key">Embed Dims:</div>
-        <div class="param-value">1280</div>
+        <div class="param-value"><span id="n-embed2"></span></div>
 
         <div class="param-key">Num Layers:</div>
-        <div class="param-value">10</div>
+        <div class="param-value"><span id="n-layers2"></span></div>
 
         <div class="param-key">FF Size:</div>
-        <div class="param-value">5120</div>
+        <div class="param-value"><span id="n-ff1"></span></div>
 
         <div class="param-key">Context Len:</div>
-        <div class="param-value">1024</div>
+        <div class="param-value"><span id="n-context1"></span></div>
     </div>
     
 </div>
 
 
     <p>
-      With this model we're off to the races! With the LM head weight-sharing with the embeddings, we are down to 356M parameters. RoPE embeddings are nice to have (no position embeddings needed), and a head dimension of 256 makes for quick but effective training. Not big, but definitely capable of something! </p>
+      With this model we're off to the races! With the LM head weight-sharing with the embeddings, we are down to <span id="param-count2"></span> parameters. RoPE embeddings are nice to have (no position embeddings needed), and a head dimension of <span id="n-embed-head1"></span> makes for quick but effective training. Not big, but definitely capable of something! </p>
     </p>
 
     <h2>Check Back in Tomorrow for More!</h2>
     <p>
       Updates daily on the project! I code as much as I can after work (well into the night, its unhealthy...) to get updates to you. Thanks for reading so far!
     </p>
-    <!-- <p>
-        The model is currently in Pre-Training phase on a <a href="https://cloud.lambda.ai/" target="_blank" rel="noopener noreferrer">Lambda AI</a> cloud instance of a GH200 GPU. 12 billion tokens later and loss is at 4.02183. Stay tuned as we enter later phases, thanks for reading! - Steinshark 
-
-    </p>
-    <h2>Try the Chat Interface</h2>
-    <p>
-      Head over to the <a href="./chat.html" style="color: #32CD32; font-weight: bold;">Chat page</a> to interact with the current running version of the SLM. Real-time stats included.
-    </p> -->
+  
   </div>
   <script src="codeflow.js"></script>
+
+  <script>
+    const root = document.documentElement;
+    document.getElementById('param-count1').textContent = getComputedStyle(root).getPropertyValue('--model-param-count').trim();
+    document.getElementById('param-count2').textContent = getComputedStyle(root).getPropertyValue('--model-param-count').trim();
+    document.getElementById('n-layers1').textContent = getComputedStyle(root).getPropertyValue('--model-n-layers').trim();
+    document.getElementById('n-layers2').textContent = getComputedStyle(root).getPropertyValue('--model-n-layers').trim();
+    document.getElementById('n-heads1').textContent = getComputedStyle(root).getPropertyValue('--model-n-heads').trim();
+    document.getElementById('n-embed-head1').textContent = getComputedStyle(root).getPropertyValue('--model-n-embed-head').trim();
+    document.getElementById('n-embed1').textContent = getComputedStyle(root).getPropertyValue('--model-n-embed').trim();
+    document.getElementById('n-embed2').textContent = getComputedStyle(root).getPropertyValue('--model-n-embed').trim();
+    document.getElementById('n-ff1').textContent = getComputedStyle(root).getPropertyValue('--model-n-ff').trim();
+    document.getElementById('n-context1').textContent = getComputedStyle(root).getPropertyValue('--model-n-context').trim();
+    document.getElementById('n-vocab1').textContent = getComputedStyle(root).getPropertyValue('--model-n-vocab').trim();
+    document.getElementById('n-vocab2').textContent = getComputedStyle(root).getPropertyValue('--model-n-vocab').trim();
+  </script>
 </body>
 </html>

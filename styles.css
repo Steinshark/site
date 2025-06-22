@@ -1,11 +1,20 @@
 :root {
-  --bg-dark: #121212;
-  --text-light: #e0e0e0;
-  --button-color: linear-gradient(90deg, #00c3ff, #a5d3f8);
-  --panel-dark: #3e494b;
-  --card-bg: #1a1a1a;
-}
+    --bg-dark: #121212;
+    --text-light: #e0e0e0;
+    --button-color: linear-gradient(90deg, #00c3ff, #a5d3f8);
+    --panel-dark: #3e494b;
+    --card-bg: #1a1a1a;
+    --model-param-count: 1B;
+    --model-n-layers: 20;
+    --model-n-embed: 2048;
+    --model-n-heads: 8;
+    --model-n-embed-head: 256;
+    --model-n-ff: 8192;
+    --model-n-vocab: 32768;
+    --model-n-context: 1024;
 
+    /* Add any other model params you want to centralize */
+  }
 /* Base layout */
 body {
   margin: 0;
