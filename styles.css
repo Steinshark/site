@@ -11,7 +11,7 @@
     --model-n-embed-head: 256;
     --model-n-ff: 8192;
     --model-n-vocab: 32768;
-    --model-n-context: 1024;
+    --model-n-context: 2048;
 
     /* Add any other model params you want to centralize */
   }
