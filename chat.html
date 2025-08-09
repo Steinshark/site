@@ -60,13 +60,25 @@
 
     .input button {
       margin-left: 0.5rem;
-      background: var(--button_color);
+      background: red;
       border: none;
       padding: 0.5rem 1rem;
       cursor: pointer;
       font-weight: bold;
-      color: black;
-    }
+      color: white
+   }
+
+   .buttonsend {
+      margin-left: 0.5rem;
+      background: red;
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-weight: bold;
+      color: red;
+      background: blue;
+   }
+
 
     .sidebar button {
       margin-bottom: 1rem;
@@ -235,7 +247,7 @@
         <div class="messages" id="messages"></div>
         <div class="input">
           <textarea id="user-input" rows="2" placeholder="Type your message..."></textarea>
-          <button onclick="sendMessage()">Send</button>
+          <button class="buttonsend" onclick="sendMessage()">Send</button>
         </div>
       </div>
     </div>
@@ -297,93 +309,7 @@
       appendToDebugLog("Updating stats - interval {5s}");
       </script>
 
-<script>
-  let conversation_id = Date.now();
-  const conversationList = document.getElementById("conversation-list");
-  let loggedIn = false;
-  appendToDebugLog("a");
-  import { fetchEventSource } from 'https://cdn.jsdelivr.net/npm/@microsoft/fetch-event-source@2.0.1/+esm';
-  appendToDebugLog("b");
-  function sendMessage() {
-    const inputBox = document.getElementById("user-input");
-        const message = inputBox.value.trim();
-        if (!message) return;
-        
-        inputBox.value = "";
 
-        const userMsg = document.createElement("div");
-        userMsg.innerHTML = '<span style="color: cyan;">You: </span>' + message + "<p>\n\n</p>";
-        document.getElementById("messages").appendChild(userMsg);
-        
-        
-        const botMsg = document.createElement("div");
-        botMsg.innerHTML = '<span style="color: cyan;">Bot: </span><span id="bot-stream"></span>';
-        document.getElementById("messages").appendChild(botMsg);
-        appendToDebugLog("Div created");
-        
-        const payload = {
-          request_type: "chat",
-          prompt: message,
-          conversation_id: conversation_id,
-          request_ip: "127.0.0.1"
-        };
-        
-        try {
-          window.fetchEventSource('http://localhost:5000/api/chat/stream', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload),
-            onmessage(msg) {
-              appendToDebugLog("Token: " + msg.data);
-              document.getElementById("bot-stream").innerText += msg.data;
-            },
-            onerror(err) {
-              appendToDebugLog("Streaming error: " + err.message);
-            },
-          });
-        } catch (err) {
-          appendToDebugLog("Caught error: " + err.message);
-        }
-      }
-    
-      function newConversation() {
-        conversation_id = Date.now();
-        document.getElementById("messages").innerHTML = "";
-        const item = document.createElement("li");
-        item.className = "conversation-item";
-        item.innerText = `Conversation ${new Date(conversation_id).toLocaleTimeString()}`;
-        item.onclick = () => switchConversation(conversation_id);
-        conversationList.appendChild(item);
-      }
-
-      function switchConversation(id) {
-        conversation_id = id;
-        document.getElementById("messages").innerHTML = "";
-      }
-
-      function createAccount() {
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-        console.log("Creating account for", username);
-        alert("Account creation is currently not functional.");
-      }
-
-      document.getElementById("account-link").addEventListener("click", function(e) {
-        e.preventDefault();
-        if (!loggedIn) {
-          window.location.hash = "#create-account";
-        }
-      });
-
-      window.addEventListener("hashchange", () => {
-        const hash = window.location.hash;
-        document.getElementById("chat-section").style.display = hash === "#chat" || hash === "" ? "flex" : "none";
-        document.getElementById("create-account-section").style.display = hash === "#create-account" ? "block" : "none";
-      });
-
-  </script>
 <script type="module">
   import { fetchEventSource } from 'https://cdn.jsdelivr.net/npm/@microsoft/fetch-event-source@2.0.1/+esm';
 
@@ -397,10 +323,11 @@
     inputBox.value = "";
 
     const userMsg = document.createElement("div");
-    userMsg.innerHTML = '<span style="color: cyan;">You: </span>' + message + "<p>\n\n</p>";
+    userMsg.innerHTML = '<span style="color: cyan;">\n\nYou: </span>' + message + "<p>\n\n</p>";
     messages.appendChild(userMsg);
 
     const botMsg = document.createElement("div");
+    const onErrorMsg = "API service coming soon!";
     botMsg.innerHTML = '<span style="color: cyan;">\nBot: </span><span id="bot-stream"></span>';
     messages.appendChild(botMsg);
 
@@ -422,7 +349,10 @@
       },
       onerror(err) {
         console.error("Streaming error:", err);
-        document.getElementById("bot-stream").innerText += " [Error]";
+        if(!document.getElementById("bot-stream").innerText.includes(onErrorMsg)){
+            document.getElementById("bot-stream").innerText += onErrorMsg;
+        }
+        appendToDebugLog("Bot stream is this:\n" + document.getElementById("bot-stream").innerText)
       },
     });
   });

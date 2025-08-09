@@ -86,6 +86,17 @@ a:hover::after {
   transition: background 0.3s ease;
   position: relative;  /* if you used ::after underline on links, disable for button */
 }
+.button2 {
+    background: white;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: inline-block;
+    text-decoration: none !important; /* force no underline */
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;  /* if you used ::after underline on links, disable for button */
+  }
 
 .button:hover {
   background: linear-gradient(90deg, #a5d3f8, #00c3ff);
