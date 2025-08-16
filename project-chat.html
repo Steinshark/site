@@ -567,6 +567,17 @@
       With this model we're off to the races! With the LM head weight-sharing with the embeddings, we are just above <span id="param-count2"></span> parameters. RoPE embeddings are nice to have (no position embeddings needed), and a head dimension of <span id="n-embed-head1"></span> makes for quick but effective training. Not big, but definitely capable of something! </p>
     </p>
 
+    <h2>Training!</h2>
+    <p>
+      Training by far took the most time. After a few days, I gave up on my 4060 and used online compute from LambdaAI.com (highly recommend). For 10 days, the model crunched 50 billion tokens. 
+      And now that brings us to finetuning - the real hard part. 
+    </p>
+
+    <p>
+      You see, pretraining is easy! Point and go. Finetuning is the real art of the deal - finding what combination of training steps, what data will improve the model, and just finding quality datasets. I opted for a crowd sourced approach. 
+      Iterative refinement of the model based on rejecting / accepting prompt pairs. Please take a minute to contribute - and <a href="project-chat-data.html">see the model </a> in action while youre at it!  
+    </p>
+
     <h2>Check Back in Tomorrow for More!</h2>
     <p>
       Updates daily on the project! I code as much as I can after work (well into the night, its unhealthy...) to get updates to you. Thanks for reading so far!

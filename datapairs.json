@@ -1,0 +1,17 @@
+[
+  {
+    "prompt": "Explain the difference between supervised and unsupervised learning.",
+    "response1": "Supervised learning uses labeled data to train a model to predict outputs for new inputs.",
+    "response2": "Unsupervised learning analyzes unlabeled data to find hidden structures or patterns."
+  },
+  {
+    "prompt": "What is overfitting in machine learning?",
+    "response1": "Overfitting happens when a model memorizes the training data instead of learning general patterns.",
+    "response2": "Overfitting is when the model doesn’t learn enough and performs poorly."
+  },
+  {
+    "prompt": "Why is normalization important in neural networks?",
+    "response1": "It ensures input features are on similar scales, improving convergence and stability.",
+    "response2": "Because it keeps all the inputs exactly the same."
+  }
+]
