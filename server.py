@@ -196,4 +196,4 @@ def submit_choice():
 
 if __name__ == "__main__":
     #start_load_cycle()
-    app.run(host="0.0.0.0",debug=True, port=6969)
+    app.run(host="localhost",debug=True, port=6969)
