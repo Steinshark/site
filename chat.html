@@ -263,6 +263,7 @@
     
     
     <script>
+      const RecServErr = false;
       function appendToDebugLog(text) {
         const box = document.getElementById('debug-box');
         const timestamp = new Date().toLocaleTimeString();
@@ -302,6 +303,7 @@
           const errMsg = document.createElement("div");
           //appendToDebugLog("Failed fetching stats.")
           document.getElementById("messages").appendChild(errMsg);
+          RecServErr = true;
         });
       }
       getStats();
@@ -351,8 +353,8 @@
         console.error("Streaming error:", err);
         if(!document.getElementById("bot-stream").innerText.includes(onErrorMsg)){
             document.getElementById("bot-stream").innerText += onErrorMsg;
+            appendToDebugLog("Bot stream is this:\n" + document.getElementById("bot-stream").innerText);
         }
-        appendToDebugLog("Bot stream is this:\n" + document.getElementById("bot-stream").innerText)
       },
     });
   });
