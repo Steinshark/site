@@ -136,13 +136,13 @@ def model_stats():
 
     return jsonify({
         "param_count": f"{MODEL.n_params//1_000_000}M",
-        "layer_count": MODEL.n_layers,
-        "embed_size": MODEL.n_embed,
-        "vocab_size": 32768,
+        "layer_count": f"{MODEL.n_layers}",
+        "embed_size": f"{MODEL.n_embed}",
+        "vocab_size": "32768",
         "phase": "Fine Tuning",
         "loss": f"{sum(stats['losses'][-100:])/100:.4f}",
         "dtype":"bfloat_16",
-        "tokens_trained": toks,
+        "tokens_trained": f"{toks}",
         "last_update": datetime.datetime.fromtimestamp(stats['time_snap'],tz=TIMEZONE)
     })
 

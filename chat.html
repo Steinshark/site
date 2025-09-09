@@ -247,7 +247,7 @@
         <div class="messages" id="messages"></div>
         <div class="input">
           <textarea id="user-input" rows="2" placeholder="Type your message..."></textarea>
-          <button class="buttonsend" onclick="sendMessage()">Send</button>
+          <button class="buttonsend" id="sendBtn">Send</button>
         </div>
       </div>
     </div>
@@ -319,9 +319,10 @@
   const conversation_id = Date.now();
 
   const inputBox = document.getElementById("user-input");
+  const sendBtn = document.getElementById("sendBtn")
   const messages = document.getElementById("messages");
 
-  document.querySelector("button").addEventListener("click", () => {
+  sendBtn.addEventListener("click", () => {
     const message = inputBox.value.trim();
     inputBox.value = "";
 
