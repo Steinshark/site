@@ -21,10 +21,11 @@ RESPONSES_FILE = "C:/data/cloudGPT/finetune/crowdsource_choices.jsonl"
 #Load the tokenizer
 CUR_MODEL       = "C:/data/nlp/models/finetune0"
 CUR_TOK         = "C:/gitrepos/cloudgpt/tokenizer"
-TOP_P           = .9
-TEMP            = .75
-N_TOK           = 512
+TOP_P           = .999
+TEMP            = .5
+N_TOK           = 256
 
+PROMPTS         = "C:/gitrepos/cloudGPT/rlhf"
 
 MODEL           = LMSteinshark.from_loadpoint(CUR_MODEL,p_override=0).bfloat16().cuda().eval()
 TOKENIZER       = load_tokenizer(CUR_TOK)
@@ -79,9 +80,8 @@ def serve_chat_request():
     def generate():
         print(f"generating")
         prompt = request.json.get("prompt", "")
-        for token in MODEL.token_streamer(prompt,TOKENIZER,256,.75,None,.9,'p'):  # Replace with your generator
+        for token in MODEL.token_streamer(prompt,TOKENIZER,256,.75,None,TOP_P,'p'):  # Replace with your generator
             yield f"data: {token}\n\n"
-            time.sleep(0.05)  # Simulate streaming delay
 
     return Response(stream_with_context(generate()), mimetype='text/event-stream')
 
@@ -115,6 +115,10 @@ def serve_chat_request():
     
     # else:
     #     print(f"serving unknown")
+
+@app.route("/api/rlhf-next", methods=['POST'])
+def serve_rlhf_choice():
+    pass
 
 
 @app.route('/api/stats', methods=['POST'])

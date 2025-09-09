@@ -1,0 +1,62 @@
+html, body {
+  height: 100%;
+}
+
+.main {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+.chatbox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  position: relative; /* needed for absolute input positioning */
+}
+
+
+.input {
+  position: absolute;
+  bottom: 20px;           /* distance from bottom */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;             /* restrict width */
+  max-width: 600px;       /* optional max width */
+  display: flex;
+  gap: 0.5rem;            /* space between textarea and button */
+  background-color: transparent; /* no extra background */
+}
+
+.input textarea {
+  flex: 1;
+  resize: none;
+  padding: 0.75rem 1rem;
+  background-color: #2a2a2a;
+  color: var(--text-light);
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+}
+
+.input button {
+  padding: 0.75rem 1.25rem;
+  border-radius: 25px;
+  border: none;
+  background-color: #0078ff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.input button:hover {
+  background-color: #005bb5;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 100px; /* make room for the floating input */
+}

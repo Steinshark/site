@@ -12,14 +12,17 @@
   gtag('config', 'G-49NV8NMBJP');
   </script>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="chat.css" />
   <script src="https://cdn.jsdelivr.net/npm/@microsoft/fetch-event-source@2.0.1/lib/umd/index.min.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SLM Chat Interface</title>
   <style>
+
+    /* Assume your header height is 75px */
     .main {
       display: flex;
-      flex: 1;
+      height: calc(100vh - 75px); /* full viewport minus header */
       overflow: hidden;
     }
 
@@ -29,44 +32,13 @@
       padding: 1rem;
       overflow-y: auto;
       border-right: 1px solid #333;
+      height: 100%; /* now constrained by .main */
+      box-sizing: border-box;
     }
 
-    .chatbox {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 1rem;
-    }
 
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      padding-bottom: 1rem;
-    }
 
-    .input {
-      display: flex;
-    }
 
-    .input textarea {
-      flex: 1;
-      resize: none;
-      padding: 0.5rem;
-      background-color: #2a2a2a;
-      color: var(--text-light);
-      border: none;
-      border-radius: 4px;
-    }
-
-    .input button {
-      margin-left: 0.5rem;
-      background: red;
-      border: none;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      font-weight: bold;
-      color: white
-   }
 
    .buttonsend {
       margin-left: 0.5rem;
@@ -174,6 +146,8 @@
     padding: 8px 12px;
     border-radius: 12px;
     line-height: 1.4;
+    word-break: break-word;   /* breaks within long words if needed */
+    overflow-wrap: break-word; /* fallback for older browsers */
   }
 
   .message.user .message-text {
@@ -382,12 +356,17 @@
       request_ip: "127.0.0.1"
     };
 
+    const messagesContainer = document.getElementById("messages");
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
     fetchEventSource("https://api.hipowerpc.com/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
       onmessage(msg) {
         streamTarget.innerText += msg.data;
+        const messagesContainer = document.getElementById("messages");
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
       },
       onerror(err) {
         console.error("Streaming error:", err);

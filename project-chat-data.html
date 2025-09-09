@@ -1,241 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Prompt Comparison</title>
+<div class="container">
+  <div class="original-prompt" id="original-prompt">Loading prompt...</div>
+  <div class="options">
+    <div class="option" id="option-a">Option A</div>
+    <div class="option" id="option-b">Option B</div>
+  </div>
+</div>
+
 <style>
-:root {
-    --bg-dark: #121212;
-    --text-light: #e0e0e0;
-    --button-color: linear-gradient(90deg, #64a1b4, rgb(27, 101, 123));
-    --panel-dark: #3e494b;
-    --card-bg: #1a1a1a;
-}
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: var(--bg-dark);
-    color: var(--text-light);
+.original-prompt {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  background-color: var(--panel-dark);
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #00c3ff;
 }
 
-/* HEADER */
-header {
-    position: relative;
-    overflow: hidden;
-    height: 75px;
-    padding: 0.5rem 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(90deg, #00FFFF, #7d85f8, #32CD32);
-    background-size: 300% 300%;
-    animation: ripple 20s linear infinite;
-    z-index: 1;
-}
-header > *:not(.code-stream) {
-    position: relative;
-    z-index: 2;
-}
-header > div strong {
-    color: black;
-}
-nav a {
-    color: black;
-    margin: 0 1rem;
-    text-decoration: none;
-    font-weight: bold;
-}
-nav a:hover {
-    color: #0969c9;
+.option {
+  background-color: var(--panel-dark);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.2s ease;
 }
 
-/* CODE STREAM */
-.code-stream {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 75px;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 0;
-    font-family: 'Courier New', monospace;
-    font-size: 0.8rem;
-    color: black;
-    filter: blur(0.6px);
-}
-.code-line {
-    position: absolute;
-    white-space: pre;
-    opacity: 0;
+.option:hover {
+  background-color: #444;
+  transform: scale(1.02);
 }
 
-@keyframes ripple {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* PROMPT COMPARISON LAYOUT */
-main {
-    max-width: 1000px;
-    margin: 2rem auto;
-    padding: 1rem;
-}
-.prompt {
-    font-weight: bold;
-    margin-bottom: 20px;
-    font-size: 1.2em;
-}
-.response-container {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-.response {
-    flex: 1;
-    padding: 15px;
-    border: 2px solid var(--panel-dark);
-    border-radius: 8px;
-    background-color: var(--card-bg);
-    cursor: pointer;
-    transition: border-color 0.2s, background-color 0.2s;
-}
-.response:hover {
-    border-color: #00c3ff;
-    background-color: #1e1e1e;
-}
-.buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-button {
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 1em;
-    border-radius: 5px;
-    border: none;
-    background: var(--button-color);
-    color: white;
-    transition: background-color 0.2s;
-}
-button:hover {
-    background: linear-gradient(90deg, #22c3ff, #00c3ff);
+.option.selected {
+  border: 2px solid #00c3ff;
 }
 </style>
-</head>
-<body>
-
-<header>
-    <div><strong>Prompt Evaluator</strong></div>
-    <nav>
-        <a href="./index.html">Home</a>
-      <a href="./story.html">Story</a>
-      <a href="./projects.html">Projects</a>
-      <a href="./chat.html">Chat</a>
-    </nav>
-    <div class="code-stream" id="codeStream"></div>
-</header>
-
-<main>
-    <div class="prompt" id="prompt">Loading prompt...</div>
-
-    <div class="response-container">
-        <div class="response" id="response1"></div>
-        <div class="response" id="response2"></div>
-    </div>
-
-    <div class="buttons">
-        <button id="bothBtn">Both</button>
-        <button id="neitherBtn">Neither</button>
-    </div>
-</main>
 
 <script>
-let dataPairs = [];
-let currentIndex = 0;
-let datachoices = [];
+const optionA = document.getElementById('option-a');
+const optionB = document.getElementById('option-b');
+const originalPrompt = document.getElementById('original-prompt');
 
-
-const SERVER_ADDRESS = "http://72.253.10.109:2657";
-
-async function loadData() {
-    try {
-        const res = await fetch('datapairs.json');
-        if (!res.ok) throw new Error("Failed to load datapairs.json");
-        dataPairs = await res.json();
-        showPair();
-    } catch (err) {
-        console.error(err);
-        document.getElementById('prompt').textContent = "Error loading dataset.";
-    }
-}
-
-function showPair() {
-    if (currentIndex >= dataPairs.length) {
-        document.getElementById('prompt').textContent = "No more pairs!";
-        document.getElementById('response1').textContent = "";
-        document.getElementById('response2').textContent = "";
-        const jsonString = JSON.stringify(datachoices, null, 2); // The 'null, 2' arguments add pretty-printing (indentation)
-        document.getElementById('prompt').textContent = jsonString;
-        submitToServer(jsonString);
-        return;
-    }
-    const pair = dataPairs[currentIndex];
-    document.getElementById('prompt').textContent = pair.prompt;
-    document.getElementById('response1').textContent = pair.response1;
-    document.getElementById('response2').textContent = pair.response2;
-}
-
-function submitChoice(choice) {
-    console.log(`Choice for index ${currentIndex}: ${choice}`);
-
-    const datachoice = {
-        'prompt' : currentIndex,
-        'choice' : choice
-    };
-
-    datachoices.push(datachoice);
-
-    currentIndex++;
-    showPair();
-}
-
-function submitToServer(payload, userId = null) {
-
-    if (userId) payload.user_id = userId;
-
-    fetch(`${SERVER_ADDRESS}/submit_choice`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: payload
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === "ok") {
-            console.log("Successfully submitted choice to server.");
-        } else {
-            console.error("Server error:", data.message);
-        }
-    })
-    .catch(err => {
-        console.error("Failed to submit choice:", err);
+async function loadPrompt() {
+  try {
+    const response = await fetch("https://api.hipowerpc.com/api/rlhf-next", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ request_type: "next_prompt" })
     });
+
+    const data = await response.json();
+
+    originalPrompt.textContent = data.prompt; // original prompt text
+    optionA.textContent = "A: " + data.option_a;
+    optionB.textContent = "B: " + data.option_b;
+
+    // Reset any previous selection
+    optionA.classList.remove("selected");
+    optionB.classList.remove("selected");
+  } catch (err) {
+    console.error("Failed to fetch prompt:", err);
+    originalPrompt.textContent = "Failed to load prompt.";
+  }
 }
 
-document.getElementById('response1').addEventListener('click', () => submitChoice('response1'));
-document.getElementById('response2').addEventListener('click', () => submitChoice('response2'));
-document.getElementById('bothBtn').addEventListener('click', () => submitChoice('both'));
-document.getElementById('neitherBtn').addEventListener('click', () => submitChoice('neither'));
+// Optional: click handler
+optionA.addEventListener('click', () => {
+  optionA.classList.add('selected');
+  optionB.classList.remove('selected');
+  submitSelection('A');
+});
 
-// Fake code stream effect
-console.log("test");
-loadData();
+optionB.addEventListener('click', () => {
+  optionB.classList.add('selected');
+  optionA.classList.remove('selected');
+  submitSelection('B');
+});
+
+async function submitSelection(choice) {
+  try {
+    await fetch("https://api.hipowerpc.com/api/rlhf-submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ choice })
+    });
+    loadPrompt(); // load next prompt automatically
+  } catch (err) {
+    console.error("Failed to submit choice:", err);
+  }
+}
+
+// Initial load
+loadPrompt();
 </script>
-<script src="codeflow.js"></script>
-</body>
-</html>
