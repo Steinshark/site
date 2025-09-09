@@ -310,7 +310,7 @@
           request_type: "stats",
           request_ip: "127.0.0.1"
         };
-        fetch("http://72.253.10.109:6969/api/stats", {
+        fetch("https://myapi.local/api/stats", {
           
           method: "POST",
           headers: {
@@ -335,7 +335,7 @@
           const errMsg = document.createElement("div");
           //appendToDebugLog("Failed fetching stats.")
           document.getElementById("messages").appendChild(errMsg);
-          appendToDebugLog("Failed fetching stats" + err);
+          appendToDebugLog(err);
         });
       }
       getStats();
@@ -382,7 +382,7 @@
       request_ip: "127.0.0.1"
     };
 
-    fetchEventSource("http://72.253.10.109:6969/api/chat", {
+    fetchEventSource("https://myapi.local/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),

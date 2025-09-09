@@ -61,19 +61,19 @@ def check_credentials(username, password):
         # No users file yet
         return False
 
-@app.route('/api/chat/stream', methods=['POST'])
-def stream_chat():
-    print(f"user connected")
-    def generate():
-        print(f"generating")
-        prompt = request.json.get("prompt", "")
-        print(f"promt: {prompt}")
-        for token in MODEL.token_streamer(prompt,TOKENIZER,256,.75,None,.9,'p'):  # Replace with your generator
-            yield f"data: {token}\n\n"
-            time.sleep(0.05)  # Simulate streaming delay
-    return Response(stream_with_context(generate()), mimetype='text/event-stream')
+# @app.route('/api/chat/stream', methods=['POST'])
+# def stream_chat():
+#     print(f"user connected")
+#     def generate():
+#         print(f"generating")
+#         prompt = request.json.get("prompt", "")
+#         print(f"promt: {prompt}")
+#         for token in MODEL.token_streamer(prompt,TOKENIZER,256,.75,None,.9,'p'):  # Replace with your generator
+#             yield f"data: {token}\n\n"
+#             time.sleep(0.05)  # Simulate streaming delay
+#     return Response(stream_with_context(generate()), mimetype='text/event-stream')
 
-@app.route("/api/chat", methods=["POST"])
+@app.route("/chat", methods=["POST"])
 def serve_chat_request():
 
     def generate():
@@ -117,7 +117,7 @@ def serve_chat_request():
     #     print(f"serving unknown")
 
 
-@app.route('/api/stats', methods=['POST'])
+@app.route('/stats', methods=['POST'])
 def model_stats():
     data = request.json
     print(f"sending stats")
@@ -146,7 +146,7 @@ def model_stats():
         "last_update": datetime.datetime.fromtimestamp(stats['time_snap'],tz=TIMEZONE)
     })
 
-@app.route('/api/login', methods=['POST'])
+@app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
     username = data.get("username", "").strip()
@@ -197,4 +197,4 @@ def submit_choice():
 
 if __name__ == "__main__":
     #start_load_cycle()
-    app.run(host="0.0.0.0",debug=True, port=6969)
+    app.run(host="127.0.0.1",debug=True,port=6969)
