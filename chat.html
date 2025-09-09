@@ -275,6 +275,7 @@
       appendToDebugLog("Debug log initialized.");
       
       function getStats() {
+        appendToDebugLog("building payload");
         const payload = {
           request_type: "stats",
           request_ip: "127.0.0.1"
@@ -304,7 +305,6 @@
           const errMsg = document.createElement("div");
           //appendToDebugLog("Failed fetching stats.")
           document.getElementById("messages").appendChild(errMsg);
-          RecServErr = true;
           appendToDebugLog("Failed fetching stats" + err);
         });
       }
