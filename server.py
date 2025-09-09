@@ -123,8 +123,9 @@ def model_stats():
     print(f"sending stats")
 
     #get stats 
-    stats   = json.loads(open(os.path.join(PREV_RUNS,f"{MODEL.name}.json")).read())
-    toks    = stats['tokens'][-1]
+    stats   = MODEL.stats
+    toks    = stats['tok_through']
+    
 
     if toks > 1_000_000_000:
         toks    = f"{toks / 1_000_000_000:.3f}"
@@ -138,11 +139,11 @@ def model_stats():
         "layer_count": MODEL.n_layers,
         "embed_size": MODEL.n_embed,
         "vocab_size": 32768,
-        "phase": "Pre-Training",
+        "phase": "Fine Tuning",
         "loss": f"{sum(stats['losses'][-100:])/100:.4f}",
         "dtype":"bfloat_16",
         "tokens_trained": toks,
-        "last_update": datetime.datetime.fromtimestamp(os.path.getmtime(os.path.join(PREV_RUNS,f"{MODEL.name}.json")),tz=TIMEZONE)
+        "last_update": datetime.datetime.fromtimestamp(stats['time_snap'],tz=TIMEZONE)
     })
 
 @app.route('/api/login', methods=['POST'])
@@ -196,4 +197,4 @@ def submit_choice():
 
 if __name__ == "__main__":
     #start_load_cycle()
-    app.run(host="localhost",debug=True, port=6969)
+    app.run(host="0.0.0.0",debug=True, port=6969)
