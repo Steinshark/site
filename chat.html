@@ -298,6 +298,7 @@
           document.getElementById("loss").innerText = data.loss;
           document.getElementById("dtype").innerText = data.dtype;
           document.getElementById("last_update").innerText = data.last_update;
+          appendToDebugLog("Success fetching stats");
         })
         .catch(err => {
           const errMsg = document.createElement("div");
