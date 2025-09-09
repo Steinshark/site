@@ -305,10 +305,11 @@
           //appendToDebugLog("Failed fetching stats.")
           document.getElementById("messages").appendChild(errMsg);
           RecServErr = true;
+          appendToDebugLog("Failed fetching stats" + err);
         });
       }
       getStats();
-      setInterval(getStats, 5000);
+      //setInterval(getStats, 5000);
       appendToDebugLog("Updating stats - interval {5s}");
       </script>
 
