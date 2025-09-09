@@ -73,7 +73,7 @@ def check_credentials(username, password):
 #             time.sleep(0.05)  # Simulate streaming delay
 #     return Response(stream_with_context(generate()), mimetype='text/event-stream')
 
-@app.route("/chat", methods=["POST"])
+@app.route("/api/chat", methods=["POST"])
 def serve_chat_request():
 
     def generate():
@@ -117,7 +117,7 @@ def serve_chat_request():
     #     print(f"serving unknown")
 
 
-@app.route('/stats', methods=['POST'])
+@app.route('/api/stats', methods=['POST'])
 def model_stats():
     data = request.json
     print(f"sending stats")

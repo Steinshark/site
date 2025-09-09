@@ -310,7 +310,7 @@
           request_type: "stats",
           request_ip: "127.0.0.1"
         };
-        fetch("https://myapi.local/api/stats", {
+        fetch("https://api.hipowerpc.com/api/stats", {
           
           method: "POST",
           headers: {
@@ -382,7 +382,7 @@
       request_ip: "127.0.0.1"
     };
 
-    fetchEventSource("https://myapi.local/api/chat", {
+    fetchEventSource("https://api.hipowerpc.com/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
