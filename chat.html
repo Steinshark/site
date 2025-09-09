@@ -156,6 +156,37 @@
     color: #eee;
   }
 
+  .message {
+  margin: 10px 0;        /* spacing between messages */
+  display: flex;
+  }
+
+  .message.user {
+    justify-content: flex-end;  /* push user messages to the right */
+  }
+
+  .message.bot {
+    justify-content: flex-start; /* bot messages stay on the left */
+  }
+
+  .message-text {
+    max-width: 70%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    line-height: 1.4;
+  }
+
+  .message.user .message-text {
+    background-color: #0078ff;  /* blue bubble */
+    color: white;
+  }
+
+  .message.bot .message-text {
+    background-color: #333;     /* dark bubble */
+    color: #eee;
+  }
+
+
   #debug-container {
     margin-top: 10px;
   }
@@ -184,7 +215,7 @@
       <a href="./index.html">Home</a>
       <a href="./story.html">Story</a>
       <a href="./projects.html">Projects</a>
-      <a href="'./chat.html">Chat</a>
+      <a href="./chat.html">Chat</a>
     </nav>
     <div class="code-stream"></div>
   </header>
@@ -322,44 +353,52 @@
   const sendBtn = document.getElementById("sendBtn")
   const messages = document.getElementById("messages");
 
-  sendBtn.addEventListener("click", () => {
+  document.getElementById("sendBtn").addEventListener("click", () => {
     const message = inputBox.value.trim();
+    if (!message) return;
     inputBox.value = "";
 
+    // User message
     const userMsg = document.createElement("div");
-    userMsg.innerHTML = '<span style="color: cyan;">\n\nYou: </span>' + message + "<p>\n\n</p>";
+    userMsg.className = "message user";
+    userMsg.innerHTML = `<div class="message-text">You: ${message}</div>`;
     messages.appendChild(userMsg);
 
+    // Bot message
     const botMsg = document.createElement("div");
-    const onErrorMsg = "API service coming soon!";
-    botMsg.innerHTML = '<span style="color: cyan;">\nBot: </span><span id="bot-stream"></span>';
+    botMsg.className = "message bot";
+    const botText = document.createElement("div");
+    botText.className = "message-text";
+    botText.innerHTML = `Bot: <span class="bot-stream"></span>`;
+    botMsg.appendChild(botText);
     messages.appendChild(botMsg);
 
+    const streamTarget = botMsg.querySelector(".bot-stream");
+    // Payload
     const payload = {
       request_type: "chat",
       prompt: message,
-      conversation_id:conversation_id,
+      conversation_id: conversation_id,
       request_ip: "127.0.0.1"
     };
 
     fetchEventSource("http://72.253.10.109:6969/api/chat", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
       onmessage(msg) {
-        document.getElementById("bot-stream").innerText += msg.data;
+        streamTarget.innerText += msg.data;
       },
       onerror(err) {
         console.error("Streaming error:", err);
-        if(!document.getElementById("bot-stream").innerText.includes(onErrorMsg)){
-            document.getElementById("bot-stream").innerText += onErrorMsg;
-            appendToDebugLog("Bot stream is this:\n" + document.getElementById("bot-stream").innerText);
+        if (!streamTarget.innerText.includes("API service coming soon!")) {
+          streamTarget.innerText += "API service coming soon!";
+          appendToDebugLog("Bot stream error: " + err);
         }
-      },
+      }
     });
   });
+
 </script>
 <script src="codeflow.js"></script>
 </body>
