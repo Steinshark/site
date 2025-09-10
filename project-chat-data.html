@@ -1,3 +1,48 @@
+
+<header>
+    <div><strong>SLM Chat</strong></div>
+    <nav>
+      <a href="./index.html">Home</a>
+      <a href="./story.html">Story</a>
+      <a href="./projects.html">Projects</a>
+      <a href="./chat.html">Chat</a>
+      <a href="./project-chat-data.html">Test Model</a>
+    </nav>
+    <div class="code-stream"></div>
+  </header>
+
+
+
+<h1 class="page-title">
+  Help Train an AI Assistant with RLHF (Reinforcement Learning from Human Feedback)
+</h1>
+
+<p class="intro-text">
+  Join our open research project and contribute to the future of AI!  
+  By comparing and ranking different chatbot responses, you'll provide valuable human feedback 
+  that helps improve large language models (LLMs) after pretraining.  
+  This process, called <strong>Reinforcement Learning from Human Feedback (RLHF)</strong>, is 
+  essential for making AI assistants more accurate, helpful, and aligned with real user needs.  
+  Select the best response below and help shape the next generation of AI assistants.
+</p>
+
+<style>
+.page-title {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 1.8rem;
+}
+
+.intro-text {
+  margin: 0 auto;
+  margin-top: 2rem;
+  max-width: 800px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  text-align: left;
+}
+</style>
+
 <div class="container">
   <div class="original-prompt" id="original-prompt">Loading prompt...</div>
   <div class="options">
@@ -5,24 +50,39 @@
     <div class="option" id="option-b">Option B</div>
   </div>
 </div>
-
+<link rel="stylesheet" href="styles.css" />
 <style>
+.container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  font-family: Arial, sans-serif;
+}
+
 .original-prompt {
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
-  background-color: var(--panel-dark);
+  font-size: 1.2rem;
+  background-color: var(--panel-dark, #222);
   padding: 1rem;
   border-radius: 8px;
   border-left: 4px solid #00c3ff;
 }
 
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .option {
-  background-color: var(--panel-dark);
+  background-color: var(--panel-dark, #8f8f8f);
   padding: 1rem;
-  margin-bottom: 1rem;
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.1s ease, background 0.2s ease;
+  border: 2px solid transparent;
 }
 
 .option:hover {
@@ -31,7 +91,7 @@
 }
 
 .option.selected {
-  border: 2px solid #00c3ff;
+  border-color: #00c3ff;
 }
 </style>
 
@@ -39,6 +99,8 @@
 const optionA = document.getElementById('option-a');
 const optionB = document.getElementById('option-b');
 const originalPrompt = document.getElementById('original-prompt');
+
+let currentData = null; // store the current prompt data
 
 async function loadPrompt() {
   try {
@@ -49,12 +111,12 @@ async function loadPrompt() {
     });
 
     const data = await response.json();
+    currentData = data;
 
-    originalPrompt.textContent = data.prompt; // original prompt text
+    originalPrompt.textContent = data.prompt;
     optionA.textContent = "A: " + data.option_a;
     optionB.textContent = "B: " + data.option_b;
 
-    // Reset any previous selection
     optionA.classList.remove("selected");
     optionB.classList.remove("selected");
   } catch (err) {
@@ -63,31 +125,33 @@ async function loadPrompt() {
   }
 }
 
-// Optional: click handler
+async function submitSelection(choice) {
+  if (!currentData) return;
+
+  try {
+    await fetch("https://api.hipowerpc.com/api/rlhf-submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...currentData, choice })
+    });
+    loadPrompt();
+  } catch (err) {
+    console.error("Failed to submit choice:", err);
+  }
+}
+
+// Click handlers
 optionA.addEventListener('click', () => {
   optionA.classList.add('selected');
   optionB.classList.remove('selected');
-  submitSelection('A');
+  submitSelection("option_a");
 });
 
 optionB.addEventListener('click', () => {
   optionB.classList.add('selected');
   optionA.classList.remove('selected');
-  submitSelection('B');
+  submitSelection("option_b");
 });
-
-async function submitSelection(choice) {
-  try {
-    await fetch("https://api.hipowerpc.com/api/rlhf-submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ choice })
-    });
-    loadPrompt(); // load next prompt automatically
-  } catch (err) {
-    console.error("Failed to submit choice:", err);
-  }
-}
 
 // Initial load
 loadPrompt();

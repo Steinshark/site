@@ -13,6 +13,7 @@ import threading
 from zoneinfo import ZoneInfo # For Python 3.9+
 from data import load_tokenizer 
 from model import LMSteinshark
+import random 
 
 
 RESPONSES_FILE = "C:/data/cloudGPT/finetune/crowdsource_choices.jsonl"
@@ -25,15 +26,22 @@ TOP_P           = .999
 TEMP            = .5
 N_TOK           = 256
 
-PROMPTS         = "C:/gitrepos/cloudGPT/rlhf"
+PROMPTS         = "D:/Project Chat/data/prompt_responses.json"
+RLHF_RESP       = "D:/Project Chat/data/rlhf_choices.json"
 
 MODEL           = LMSteinshark.from_loadpoint(CUR_MODEL,p_override=0).bfloat16().cuda().eval()
 TOKENIZER       = load_tokenizer(CUR_TOK)
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all domains on all routes (adjust for production)
 
-USERS_FILE = "users.txt"
-TIMEZONE    = ZoneInfo("Pacific/Honolulu")
+USERS_FILE      = "users.txt"
+TIMEZONE        = ZoneInfo("Pacific/Honolulu")
+
+DATAPAIRS       = json.loads(open(PROMPTS,'r',encoding='utf_8').read())
+try:
+    DATASET     = json.loads(open(RLHF_RESP,'r',encoding='utf-8').read())
+except FileNotFoundError:
+    DATASET     = []
 
 
 #Allows for continuous reloading of the most recent model
@@ -118,8 +126,33 @@ def serve_chat_request():
 
 @app.route("/api/rlhf-next", methods=['POST'])
 def serve_rlhf_choice():
-    pass
+    data                = {}
 
+    prompt              = random.choice(list(DATAPAIRS.keys()))
+
+    responses           = random.sample(DATAPAIRS[prompt],2)
+
+    data['prompt']      = prompt 
+    data['option_a']    = responses[0]
+    data['option_b']    = responses[1]
+    data['choice']      = None
+    
+    print(f"geneated data {data}")
+
+    return jsonify(data)
+
+@app.route("/api/rlhf-submit",methods=['POST'])
+def submit_rlhf_choice():
+
+    data                = request.json
+    DATASET.append(data)
+
+    if len(DATASET) % 10 == 0:
+        ds = json.dumps(DATASET)
+        with open(RLHF_RESP,'w',encoding='utf-8') as writefile:
+            writefile.write(ds)
+    
+    return jsonify({})
 
 @app.route('/api/stats', methods=['POST'])
 def model_stats():

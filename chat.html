@@ -179,6 +179,16 @@
     overflow-y: scroll;
     box-sizing: border-box;
   }
+  /* Mobile: hide sidebar and let chat take full width */
+  @media (max-width: 768px) {
+    .sidebar {
+      display: none;
+    }
+
+    .chat-container {
+      width: 100%;
+    }
+  }
 
   </style>
 </head>
@@ -190,6 +200,7 @@
       <a href="./story.html">Story</a>
       <a href="./projects.html">Projects</a>
       <a href="./chat.html">Chat</a>
+      <a href="./project-chat-data.html">Test Model</a>
     </nav>
     <div class="code-stream"></div>
   </header>
