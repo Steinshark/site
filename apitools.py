@@ -26,17 +26,17 @@ if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         p.requires_grad_(False)
 
     # Compile model
-    model = torch.compile(model,backend='eager')
+    #model = torch.compile(model,backend='eager')
 
     # Warmup compile graphs for each bucket
-    with torch.inference_mode():
-        for L in BUCKETS:
-            dummy = torch.randint(0, tokenizer.get_vocab_size(), (1, L), device="cuda")
-            dummy_mask = torch.ones_like(dummy).bool()
+#     with torch.inference_mode():
+#         for L in BUCKETS:
+#             dummy = torch.randint(0, tokenizer.get_vocab_size(), (1, L), device="cuda")
+#             dummy_mask = torch.ones_like(dummy).bool()
 
-            _ = model(dummy,dummy,dummy_mask)
+#             _ = model(dummy,dummy,dummy_mask)
 
-# === BUCKETING HELPERS ===
+# # === BUCKETING HELPERS ===
 def nearest_bucket_length(length: int) -> int:
     return min(BUCKETS, key=lambda b: abs(b - length))
 
