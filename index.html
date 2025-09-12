@@ -19,18 +19,38 @@
   <title>Steinshark Language Model Project</title>
   <style>
     .hero {
-      position: relative;
-      text-align: center;
-      background-image: url("projects.avif");
-      background-position: center;
-      background-size: cover;
-      background-repeat: no-repeat;
-      height: 60vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      color: white;
-    }
+  position: relative;
+  text-align: center;
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: white;
+  overflow: hidden; /* ensures pseudo-element doesn’t spill out */
+}
+
+/* Background with filter applied */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: url("projects.avif");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  /* Apply your gamma/brightness here */
+  filter: brightness(0.6);
+
+  z-index: 0; /* behind content */
+}
+
+/* Text stays above the pseudo-element */
+.hero > * {
+  position: relative;
+  z-index: 1;
+}
 
     .hero h1 {
       font-size: 4rem;
@@ -46,7 +66,7 @@
 
     .hero p {
       font-size: 2rem;
-      color: #4a4;
+      color: #fff8dc;
       text-shadow:
       1px 1px 2px rgba(0,0,0,0.9),
       1px 1px 2px rgba(0,0,0,0.9),
