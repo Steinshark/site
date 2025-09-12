@@ -181,9 +181,107 @@ header > div strong {
   color: black;  /* title text black */
 }
 
-header nav {
-  margin-left: 0; /* remove margin-left:auto, no longer needed */
+/* Hide mobile menu by default */
+.mobile-menu .dropdown {
+  display: none;
 }
+
+/* Show dropdown when toggled */
+.mobile-menu.active .dropdown {
+  display: block;
+}
+
+/* Desktop: hide mobile menu, show desktop menu */
+@media (min-width: 768px) {
+  .mobile-menu {
+    display: none;
+  }
+  .desktop-menu {
+    display: flex; /* or whatever layout you want */
+  }
+}
+
+/* Mobile: hide desktop menu, show mobile toggle */
+@media (max-width: 767px) {
+  .desktop-menu {
+    display: none;
+  }
+  .mobile-menu {
+    display: block;
+  }
+}
+/* Base Styles */
+.navbar {
+  font-family: sans-serif;
+}
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+/* Desktop Menu */
+.desktop-menu {
+  display: flex;
+  gap: 20px;
+}
+.desktop-menu .submenu {
+  display: none;
+  position: absolute;
+  background: #f0f0f0;
+  padding: 10px;
+  margin-top: 5px;
+}
+.desktop-menu li:hover > .submenu {
+  display: block;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  display: none;
+  position: relative;
+}
+.mobile-menu .dropdown {
+  display: none;
+  flex-direction: column;
+  background: #f0f0f0;
+  margin-top: 5px;
+}
+.mobile-menu .dropdown li {
+  padding: 10px 0;
+}
+.mobile-menu .dropdown .submenu {
+  display: none;
+  padding-left: 15px;
+}
+.mobile-menu.active .dropdown {
+  display: flex;
+}
+
+/* Mobile-only toggle for submenu */
+.mobile-menu .has-submenu > a::after {
+  content: " ▼";
+  float: right;
+}
+.mobile-menu .has-submenu.active > .submenu {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Media Queries */
+@media (max-width: 767px) {
+  .desktop-menu {
+    display: none;
+  }
+  .mobile-menu {
+    display: block;
+  }
+}
+
 
 
 @keyframes ripple {

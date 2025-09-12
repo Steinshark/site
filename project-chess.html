@@ -88,11 +88,26 @@
 <body>
   <header>
     <div><strong>SLM Project</strong></div>
-    <nav>
-      <a href="./index.html">Home</a>
-      <a href="./projects.html">Projects</a>
-      <a href="./chat.html">Chat</a>
-    </nav>
+      <nav class="navbar">
+        <!-- Desktop Menu -->
+        <ul class="menu desktop-menu">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="chat.html">Chatbot</a></li>
+          <li><a href="project-chat-data.html">Teach Model</a></li>
+        </ul>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu">
+          <button class="menu-toggle">☰ Menu</button>
+          <ul class="menu desktop-menu">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="chat.html">Chatbot</a></li>
+          <li><a href="project-chat-data.html">Teach Model</a></li>
+        </ul>
+        </div>
+      </nav>
   </header>
 
   <div class="hero">
@@ -121,5 +136,24 @@
       Head over to the <a href="./chat.html" style="color: #32CD32; font-weight: bold;">Chat page</a> to interact with the current running version of the SLM. Real-time stats included.
     </p>
   </div>
+
+  <script>
+  // Toggle main mobile menu
+  const toggle = document.querySelector('.menu-toggle');
+  const mobileMenu = document.querySelector('.mobile-menu');
+
+  toggle.addEventListener('click', () => {
+    mobileMenu.classList.toggle('active');
+  });
+
+  // Toggle submenu in mobile menu
+  const mobileSubmenus = document.querySelectorAll('.mobile-menu .has-submenu > a');
+  mobileSubmenus.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      link.parentElement.classList.toggle('active');
+    });
+  });
+</script>
 </body>
 </html>

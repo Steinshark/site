@@ -92,12 +92,26 @@
   <header>
     <div class="code-stream"></div>
     <div><strong>Steinshark Projects</strong></div>
-    <nav>
-      <a href="./index.html">Home</a>
-      <a href="./projects.html">Projects</a>
-      <a href="./chat.html">Chat</a>
-      <a href="./project-chat-data.html">Test Model</a>
-    </nav>
+      <nav class="navbar">
+        <!-- Desktop Menu -->
+        <ul class="menu desktop-menu">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="chat.html">Chatbot</a></li>
+          <li><a href="project-chat-data.html">Teach Model</a></li>
+        </ul>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu">
+          <button class="menu-toggle">☰ Menu</button>
+          <ul class="menu desktop-menu">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="chat.html">Chatbot</a></li>
+          <li><a href="project-chat-data.html">Teach Model</a></li>
+        </ul>
+        </div>
+      </nav>
   </header>
 
   <main>
@@ -118,5 +132,25 @@
 
   </main>
   <script src="codeflow.js"></script>
+
+  
+<script>
+  // Toggle main mobile menu
+  const toggle = document.querySelector('.menu-toggle');
+  const mobileMenu = document.querySelector('.mobile-menu');
+
+  toggle.addEventListener('click', () => {
+    mobileMenu.classList.toggle('active');
+  });
+
+  // Toggle submenu in mobile menu
+  const mobileSubmenus = document.querySelectorAll('.mobile-menu .has-submenu > a');
+  mobileSubmenus.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      link.parentElement.classList.toggle('active');
+    });
+  });
+</script>
 </body>
 </html>

@@ -153,6 +153,8 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(() => {
       spawnNextLine();
     }, 1000);
+
+    
   
   });
   
