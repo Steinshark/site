@@ -6,15 +6,16 @@ import torch
 sys.path.append("C:/gitrepos/nlp/")
 sys.path.append("C:/gitrepos/cloudGPT/")
 import time 
-from training import PATH,MODELS,PREV_RUNS
 import json
 import datetime 
-import threading
 from zoneinfo import ZoneInfo # For Python 3.9+
 from data import load_tokenizer 
 from model import LMSteinshark
 import random 
 
+if __name__ == '__main__':
+    import apitools
+#from apitools import generate_tokens
 
 RESPONSES_FILE = "C:/data/cloudGPT/finetune/crowdsource_choices.jsonl"
 
@@ -29,8 +30,7 @@ N_TOK           = 256
 PROMPTS         = "D:/Project Chat/data/prompt_responses.json"
 RLHF_RESP       = "D:/Project Chat/data/rlhf_choices.json"
 
-MODEL           = LMSteinshark.from_loadpoint(CUR_MODEL,p_override=0).bfloat16().cuda().eval()
-TOKENIZER       = load_tokenizer(CUR_TOK)
+#TOKENIZER       = load_tokenizer(CUR_TOK)
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all domains on all routes (adjust for production)
 
@@ -88,7 +88,10 @@ def serve_chat_request():
     def generate():
         print(f"generating")
         prompt = request.json.get("prompt", "")
-        for token in MODEL.token_streamer(prompt,TOKENIZER,256,.75,None,TOP_P,'p'):  # Replace with your generator
+        # for token in MODEL.token_streamer(prompt,TOKENIZER,256,.75,None,TOP_P,'p'):  # Replace with your generator
+        #     yield f"data: {token}\n\n"
+
+        for token in apitools.generate_tokens(prompt,256,.75,None,TOP_P,'p'):  # Replace with your generator
             yield f"data: {token}\n\n"
 
     return Response(stream_with_context(generate()), mimetype='text/event-stream')
@@ -160,8 +163,7 @@ def model_stats():
     print(f"sending stats")
 
     #get stats 
-    stats   = MODEL.stats
-    toks    = stats['tok_through']
+    toks    = apitools.model.stats['tok_through']
     
 
     if toks > 1_000_000_000:
@@ -172,15 +174,15 @@ def model_stats():
         toks    = f"{toks}M"
 
     return jsonify({
-        "param_count": f"{MODEL.n_params//1_000_000}M",
-        "layer_count": f"{MODEL.n_layers}",
-        "embed_size": f"{MODEL.n_embed}",
+        "param_count": f"{apitools.model.n_params//1_000_000}M",
+        "layer_count": f"{apitools.model.n_layers}",
+        "embed_size": f"{apitools.model.n_embed}",
         "vocab_size": "32768",
         "phase": "Fine Tuning",
-        "loss": f"{sum(stats['losses'][-100:])/100:.4f}",
+        "loss": f"{sum(apitools.model.stats['losses'][-100:])/100:.4f}",
         "dtype":"bfloat_16",
         "tokens_trained": f"{toks}",
-        "last_update": datetime.datetime.fromtimestamp(stats['time_snap'],tz=TIMEZONE)
+        "last_update": datetime.datetime.fromtimestamp(apitools.model.stats['time_snap'],tz=TIMEZONE)
     })
 
 @app.route('/login', methods=['POST'])

@@ -65,6 +65,24 @@
       line-height: 1.5;
       color: #ccc;
     }
+
+    .card-link {
+  display: block;          /* makes the <a> behave like a block */
+  text-decoration: none;   /* remove underline */
+  color: inherit;          /* inherit text color from div */
+}
+
+.card {
+  padding: 1rem;
+  background: #090909;
+  border-radius: 12px;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.15);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card-link:hover .card {
+  transform: translateY(-4px);
+  box-shadow: 4px 4px 12px rgba(0,0,0,0.2);
+}
   </style>
   
   </head>
@@ -76,7 +94,6 @@
     <div><strong>Steinshark Projects</strong></div>
     <nav>
       <a href="./index.html">Home</a>
-      <a href="./story.html">Story</a>
       <a href="./projects.html">Projects</a>
       <a href="./chat.html">Chat</a>
       <a href="./project-chat-data.html">Test Model</a>
@@ -85,16 +102,17 @@
 
   <main>
     <!-- Project Card Template -->
-    <div class="project-card">
+     <a href="./project-chat.html" class="card-link">
+    <div class="card">
       <img class="project-image" src="images/code.png" alt="SLM Project Preview"/>
       <div class="project-content">
-        <h2 class="project-title">Steinshark Language Model (SLM)</h2>
+        <h2 class="project-title">1 Billion Parameter LLM</h2>
         <p class="project-desc">
-          A custom-built language model from scratch in PyTorch, featuring model parallelism, token streaming, live UI, and a fully interactive backend served over HTTP. Designed to run locally and trained on a clean dataset curated for high signal-to-noise ratio.
+          My toy language model built over a few months. A journey of finding data, hyperparameter tuning, finding large compute, and building a neat UI to interact with it.
         </p>
-        <a href="./project-chat.html" class="button">View Project</a>
       </div>
     </div>
+    </a>
 
     <!-- Future project cards can be added below using the same structure -->
 

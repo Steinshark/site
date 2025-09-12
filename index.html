@@ -21,31 +21,47 @@
     .hero {
       position: relative;
       text-align: center;
-      background: url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
+      background-image: url("projects.avif");
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
       height: 60vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       color: white;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
     }
 
     .hero h1 {
-      font-size: 3rem;
+      font-size: 4rem;
       margin-bottom: 0.5rem;
+      color: #4a4;
+      text-shadow:
+      2px 2px 4px rgba(0,0,0,0.8),
+      4px 4px 8px rgba(0,0,0,0.9),
+      6px 6px 12px rgba(0,0,0,0.9),
+      8px 8px 64px rgba(0,0,0,0.9);
+
     }
 
     .hero p {
-      font-size: 1.25rem;
+      font-size: 2rem;
+      color: #4a4;
+      text-shadow:
+      1px 1px 2px rgba(0,0,0,0.9),
+      1px 1px 2px rgba(0,0,0,0.9),
+      2px 2px 16px rgba(0,0,0,0.9),
+      3px 3px 128px rgba(0,0,0,0.9);
+
+
     }
   </style>
 </head>
 <body>
   <header>
-    <div><strong>SLM Project</strong></div>
+    <div><strong>Steinshark Projects</strong></div>
     <nav>
       <a href="./index.html">Home</a>
-      <a href="./story.html">Story</a>
       <a href="./projects.html">Projects</a>
       <a href="./chat.html">Chat</a>
       <a href="./project-chat-data.html">Test Model</a>
@@ -55,13 +71,15 @@
 
   <div class="hero">
     <h1>Steinshark's Projects</h1>
-    <p>Imagine. Create. Inspire.</p>
+    <p><strong>Building things - and community.</strong></p>
   </div>
 
   <div class="content">
     <h2>What is this?</h2>
     <p>
-      Here you will find passion projects of mine that I hope inspire others to create as well. A collection of everything I've been working on since I started my degree in computer science in 2018. I aim to make these both professional and accessible to everyone. Take a look around and let me know what you think! Did you find anything that piques your interest? I'd love to know if you do.  
+      I built this website to share the projects I create in my free time with you guys. I code projects in Python from Reinforcement Learning agents to LLMS (1B parameter - pretty small!). I was once a college student tinkering as I learned - the futher I go 
+      the more I'm able to create. My hope is that you discover something here that inspires you. Build something awesome, and share it on our blog! Meanwhile, take a look around. Talk to my <a href ="chat.html">chat bot</a>. Help him <a href="project-chat-data.html">learn something</a>. 
+      Glad you're here.
     </p>
 
     <h2>What's happening now?</h2>
@@ -71,12 +89,13 @@
 
     <h2>What you'll find?</h2>
     <p>
-      Everything here has been curated by me over the course of days, weeks, and months behind a keyboard - passionately engaged in ML projects. I launched this site in 2025 to give a public face to everything I've created. There was something missing about spending hours developing only to have but myself to enjoy it. This project serves to provide those who are curious with a tangible way to interact with what I've built. And to hopefully inspire others with what is possible with some creativity and hard work.  
+      I have spent years coding passion projects at late hours - only to be hidden away on my personal desktop. I want a place for them to be discovered and to inspire. That's why I made this site. Look around and find something to create! 
+
     </p>
 
     <h2>What's next?</h2>
     <p>
-      This site will serve as the hub for live chat demos, dev logs, project breakdowns, and long-form technical writeups. Stay tuned as my projects evolve through new data phases, architecture iterations, and deployment stages.
+      I'd love to add a blog, a forum to see what you all have done, and many more projects!
     </p>
 
     <h2>Try the Chat Interface</h2>

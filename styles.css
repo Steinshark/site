@@ -1,7 +1,11 @@
+html {
+  overflow-y: scroll;  /* always show vertical scrollbar */
+}
 :root {
     --bg-dark: #121212;
     --text-light: #e0e0e0;
-    --button-color: linear-gradient(90deg, #00c3ff, #a5d3f8);
+    /*--button-color: linear-gradient(90deg, #00c3ff, #a5d3f8);*/
+    --button-color: linear-gradient(90deg, #4a4, #000);*/
     --panel-dark: #3e494b;
     --card-bg: #1a1a1a;
     --model-param-count: 1B;
@@ -115,8 +119,11 @@ a:hover::after {
   line-height: 1.6;
 }
 
+.content h1{
+  color: #4a4;
+}
 .content h2 {
-  color: #00ffff;
+  color: #4a4;
 }
 
 .content p {
@@ -165,9 +172,8 @@ header {
   justify-content: space-between; /* title left, nav right */
   align-items: center;         /* vertical center */
 
-  background: linear-gradient(90deg, #00FFFF, #7d85f8, #32CD32);
+  background: linear-gradient(90deg, #224422, #32CD32, #11DD11);
   background-size: 300% 300%;
-  animation: ripple 20s linear infinite;
   z-index: 1;
 }
 

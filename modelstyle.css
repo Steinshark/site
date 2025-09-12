@@ -1,0 +1,181 @@
+.model-architecture {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 2rem 0;
+        /* border: 2px solid #ccc;
+        border-radius: 12px; */
+
+    }
+
+    .model-block {
+        background: #f8f9fa;
+        border: 2px solid #ccc;
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        margin: 0.5rem 0;
+        font-weight: bold;
+        width: 80%;
+        max-width: 500px;
+        text-align: center;
+        box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .arrow {
+        font-size: 2.5rem;
+        color: #777;
+        margin: 0.25rem 0;
+    }
+
+    .embedding-matrix {
+        padding: 1rem;
+        background-color: #e0f7fa;
+        border: 2px solid #4dd0e1;
+        border-radius: 16px;
+        box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+        width: fit-content;
+        margin: 1rem auto;
+    }
+
+    .embedding-title {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 0.75rem;
+        text-align: center;
+        color: #007c91;
+    }
+
+    .embedding-grid {
+        display: grid;
+        grid-template-columns: repeat(16, 1fr); /* n = 16 columns */
+        gap: 4px;
+    }
+
+    .embedding-grid-T {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* n = 16 columns */
+        gap: 4px;
+    }
+
+    .embedding-cell {
+        width: 16px;
+        height: 16px;
+        background-color: #4dd0e1;
+        border-radius: 4px;
+    }
+
+    .decoder-layer {
+        background-color: #f3f4f6;
+        border: 2px solid #cbd5e0;
+        border-radius: 16px;
+        padding: 1rem;
+        width: fit-content;
+        margin: 2rem auto;
+        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+        font-family: sans-serif;
+    }
+
+    .layer-title {
+      text-align: center;
+      font-weight: bold;
+      font-size: .9rem;
+      margin-bottom: 1rem;
+      color: #2c5282;
+    }
+
+    .layer-block {
+      background-color: #e2e8f0;
+      padding: 0.2rem 1rem;
+      border-radius: 8px;
+      margin: 0.2rem 0;
+      text-align: center;
+      font-size: 0.7rem;
+      color: #1a202c;
+    }
+
+    .layer-block.residual {
+      background-color: #c6f6d5;
+      font-weight: bold;
+      border: 1px dashed #38a169;
+    }
+
+    .transformer-stack {
+      border: 3px solid #81e6d9;
+      background-color: #e0f7fa;
+      border-radius: 20px;
+      padding: 1rem;
+      margin: 2rem auto;
+      box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .stack-title {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      color: #007c91;
+    }
+
+    .model-container {
+      position: relative;
+      border: 2px solid #4dd0e1;
+      border-radius: 16px;
+      padding: 2rem 1rem 1rem 1rem;
+      background-color: transparent;
+      margin: 2rem auto;
+      width: fit-content;
+      box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+
+      display: flex;              /* makes children layout horizontally */
+      flex-direction: row;        /* horizontal direction */
+      align-items: center;        /* vertical alignment center */
+      gap: 1.5rem;                /* spacing between items */
+    }
+
+    .model-label {
+      position: absolute;
+      top: -1rem;   /* moves label above the box */
+      left: 1rem;   /* align with box padding */
+      background-color: white; /* or match your page background */
+      padding: 0 0.5rem;
+      font-weight: bold;
+      color: #4dd0e1;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(77, 208, 225, 0.7);
+    }
+
+    .param-box {
+      border: 2px solid #4dd0e1;
+      background-color: #e0f7fa;
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      width: fit-content;
+      margin: 1rem auto;
+      box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .param-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 0.75rem;
+      text-align: center;
+      color: #007c91;
+    }
+
+    .param-grid {
+      display: grid;
+      grid-template-columns: auto auto auto auto; /* Two key-value pairs per row */
+      gap: 0.5rem 1.5rem;
+    }
+
+    .param-key {
+      font-weight: 600;
+      color: #1565c0;
+      white-space: nowrap;
+    }
+
+    .param-value {
+      font-family: monospace;
+      color: #1e88e5;
+    }
