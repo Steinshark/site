@@ -257,8 +257,6 @@ ul {
 }
 .mobile-menu.active .dropdown {
   display: flex;
-  transition: max-height 0.3s ease;
-  overflow: hidden;
 }
 
 /* Mobile-only toggle for submenu */
