@@ -243,10 +243,14 @@ ul {
   position: relative;
 }
 .mobile-menu .dropdown {
+  position: absolute;
+  top: 100%;   /* directly below header */
+  left: 0;
+  right: 0;
+  background: #f0f0f0;
   display: none;
   flex-direction: column;
-  background: #f0f0f0;
-  margin-top: 5px;
+  z-index: 1000; /* ensure above content */
 }
 .mobile-menu .dropdown li {
   padding: 10px 0;
