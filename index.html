@@ -104,6 +104,26 @@
     <div class="code-stream"></div>
   </header>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const menuToggle = document.querySelector(".menu-toggle");
+      const mobileMenu = document.querySelector(".mobile-menu");
+
+      menuToggle.addEventListener("click", () => {
+        mobileMenu.classList.toggle("active");
+      });
+
+      // Optional: toggle submenus
+      const submenuToggles = document.querySelectorAll(".mobile-menu .has-submenu > a");
+      submenuToggles.forEach(a => {
+        a.addEventListener("click", e => {
+          e.preventDefault(); // prevent navigation
+          a.parentElement.classList.toggle("active");
+        });
+      });
+    });
+    </script>
+
   <div class="hero">
     <h1>Steinshark's Projects</h1>
     <p><strong>Building things - and community.</strong></p>

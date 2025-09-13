@@ -21,11 +21,9 @@ RESPONSES_FILE = "C:/data/cloudGPT/finetune/crowdsource_choices.jsonl"
 
 
 #Load the tokenizer
-CUR_MODEL       = "C:/data/nlp/models/finetune0"
-CUR_TOK         = "C:/gitrepos/cloudgpt/tokenizer"
-TOP_P           = .999
-TEMP            = .5
-N_TOK           = 256
+TOP_P           = .95
+TEMP            = .9
+N_TOK           = 128
 
 PROMPTS         = "D:/Project Chat/data/prompt_responses.json"
 RLHF_RESP       = "D:/Project Chat/data/rlhf_choices.json"
@@ -88,10 +86,10 @@ def serve_chat_request():
     def generate():
         print(f"generating")
         prompt = request.json.get("prompt", "")
-        # for token in MODEL.token_streamer(prompt,TOKENIZER,256,.75,None,TOP_P,'p'):  # Replace with your generator
-        #     yield f"data: {token}\n\n"
 
-        for token in apitools.generate_tokens(prompt,256,.75,None,TOP_P,'p'):  # Replace with your generator
+        #Prompt needs to be wrapped in tokens 
+        prompt = f"{apitools.tokenizer.special_tokens['prompt']}{prompt}{apitools.tokenizer.special_tokens['resp']}"
+        for token in apitools.generate_tokens(prompt,N_TOK,TEMP,None,TOP_P,verbose=False):  # Replace with your generator
             yield f"data: {token}\n\n"
 
     return Response(stream_with_context(generate()), mimetype='text/event-stream')

@@ -12,8 +12,8 @@ import os
 if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
     print(f"init api")
     # === CONFIG ===
-    MODEL_PATH              = "C:/data/nlp/models/finetune0"
-    TOKENIZER_PATH          = "C:/gitrepos/cloudgpt/tokenizer"
+    MODEL_PATH              = "//Steinpc/S/nlp/models/PreFinetune352"
+    TOKENIZER_PATH          = "//Steinpc/s/nlp/tokenizer"
     BUCKETS                 = [128, 256, 2048]
 
     # === LOAD MODEL & TOKENIZER ===
@@ -60,22 +60,23 @@ def generate_tokens(
     top_p: float = 0.9,
     verbose: bool = False
 ):
-    inputs = torch.tensor(tokenizer.encode(prompt).ids).long()
+    inputs = tokenizer.encode(prompt).ids
 
-    if inputs.ndim == 1:
-        inputs = inputs.unsqueeze(0)
+    # if inputs.ndim == 1:
+    #     inputs = inputs.unsqueeze(0)
 
-    inputs  = pad_to_bucket(inputs)
-    inputs  = list(inputs.numpy().flatten())
+    #Add 
     
 
     with torch.inference_mode():
         for token in model.token_streamer(
             inputs,
             tokenizer=tokenizer,
+            n_tokens=max_tok,
+            temperature=temperature,
             topk=top_k,
             topp=top_p,
-            temperature=temperature,
+            mode='p',
             verbose=verbose,
             tokenized=True
             ):
