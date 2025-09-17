@@ -233,7 +233,12 @@ ul {
   display: none;
   position: relative;
 }
+.mobile-text {
+  color: #fff8dc;
+  padding-right: 3rem;
+  line-height: 1.86;
 
+}
 
 /* Media Queries */
 @media (max-width: 767px) {
