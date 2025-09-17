@@ -12,19 +12,25 @@ import os
 if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
     print(f"init api")
     # === CONFIG ===
-    MODEL_PATH              = "//Steinpc/S/nlp/models/PreFinetune352"
+    MODEL_PATH              = "//Steinpc/S/nlp/models/FineTune"
     TOKENIZER_PATH          = "//Steinpc/s/nlp/tokenizer"
     BUCKETS                 = [128, 256, 2048]
 
     # === LOAD MODEL & TOKENIZER ===
-    model       = LMSteinshark.from_loadpoint(MODEL_PATH,p_override=0)
     tokenizer   = load_tokenizer(TOKENIZER_PATH)
-
+    device      = 'cuda'
+    device      = 'cpu'
+    dtype       = torch.bfloat16
+    dtype       = torch.float
+    model       = LMSteinshark.from_loadpoint(MODEL_PATH,p_override=0,device=torch.device(device))
+    model.device= torch.device(device)
+    model.send_to_cpu()
     # Move to GPU, BF16, eval, no grad
-    model = model.eval().to("cuda", dtype=torch.bfloat16)
+    model = model.eval().to(device, dtype=dtype)
     for p in model.parameters():
         p.requires_grad_(False)
 
+    torch.cuda.empty_cache()
     # Compile model
     #model = torch.compile(model,backend='eager')
 
@@ -36,20 +42,7 @@ if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
 
 #             _ = model(dummy,dummy,dummy_mask)
 
-# # === BUCKETING HELPERS ===
-def nearest_bucket_length(length: int) -> int:
-    return min(BUCKETS, key=lambda b: abs(b - length))
 
-def pad_to_bucket(tokens: torch.Tensor) -> torch.Tensor:
-    L = tokens.size(1)
-    bucket_len = nearest_bucket_length(L)
-    pad_len = bucket_len - L
-
-    
-    if pad_len > 0:
-        pad = torch.full((tokens.size(0), pad_len), tokenizer.encode(RESERVE_1).ids[0], device=tokens.device)
-        tokens = torch.cat([tokens, pad], dim=1)
-    return tokens
 
 # === INFERENCE WRAPPER ===
 def generate_tokens(
@@ -78,6 +71,7 @@ def generate_tokens(
             topp=top_p,
             mode='p',
             verbose=verbose,
-            tokenized=True
+            tokenized=True,
+            device=device
             ):
             yield token

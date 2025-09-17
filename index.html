@@ -1,56 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="description" content="Computer science projects- in Python. A colletion of passion projects I've worked on for years - LLM's, chess bots, reinforcement learning. See code and progress.">
+  <meta name="description" content="Computer science projects - in Python. A colletion of LLMs, chess bots, reinforcement learning... See code and progress. Build something.">
   <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
+  
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-49NV8NMBJP"></script>
   <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-49NV8NMBJP');
   </script>
 
   <link rel="stylesheet" href="styles.css" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Python Project Collection by Steinshark</title>
+  <title>A Collection of Python Projects</title>
   <style>
     .hero {
-  position: relative;
-  text-align: center;
-  height: 60vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  color: white;
-  overflow: hidden; /* ensures pseudo-element doesn’t spill out */
-}
+      position: relative;
+      text-align: center;
+      height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: white;
+      overflow: hidden; /* ensures pseudo-element doesn’t spill out */
+    }
 
-/* Background with filter applied */
-.hero::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-image: url("projects.avif");
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+    /* Background with filter applied */
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image: url("projects.avif");
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
 
-  /* Apply your gamma/brightness here */
-  filter: brightness(0.6);
+      /* Apply your gamma/brightness here */
+      filter: brightness(0.6);
 
-  z-index: 0; /* behind content */
-}
+      z-index: 0; /* behind content */
+    }
 
-/* Text stays above the pseudo-element */
-.hero > * {
-  position: relative;
-  z-index: 1;
-}
+    /* Text stays above the pseudo-element */
+    .hero > * {
+      position: relative;
+      z-index: 1;
+    }
 
     .hero h1 {
       font-size: 4rem;
@@ -77,10 +77,13 @@
     }
   </style>
 </head>
+
 <body>
+
+  <!-- Header - Gives mobile better viewability -->
   <header>
-    <div><strong>Steinshark Projects</strong></div>
-      <nav class="navbar">
+    <div><strong>Steinshark's Projects</strong></div>
+    <nav class="navbar">
         <!-- Desktop Menu -->
         <ul class="menu desktop-menu">
           <li><a href="index.html">Home</a></li>
@@ -96,11 +99,9 @@
           <li><a href="index.html">Home</a></li>
           <li><a href="projects.html">Projects</a></li>
           <li><a href="chat.html">Chatbot</a></li>
-          <li><a href="project-chat-data.html">Teach Model</a></li>
         </ul>
         </div>
       </nav>
-
     <div class="code-stream"></div>
   </header>
 

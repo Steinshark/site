@@ -21,7 +21,7 @@ RESPONSES_FILE = "C:/data/cloudGPT/finetune/crowdsource_choices.jsonl"
 
 
 #Load the tokenizer
-TOP_P           = .95
+TOP_P           = .9
 TEMP            = .9
 N_TOK           = 128
 
