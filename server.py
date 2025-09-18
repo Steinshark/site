@@ -22,7 +22,7 @@ RESPONSES_FILE = "C:/data/cloudGPT/finetune/crowdsource_choices.jsonl"
 
 #Load the tokenizer
 TOP_P           = .9
-TEMP            = .9
+TEMP            = .8
 N_TOK           = 128
 
 PROMPTS         = "D:/Project Chat/data/prompt_responses.json"
@@ -82,10 +82,10 @@ def check_credentials(username, password):
 
 @app.route("/api/chat", methods=["POST"])
 def serve_chat_request():
-
     def generate():
         print(f"generating")
         prompt = request.json.get("prompt", "")
+        print(f"user request: {prompt[:100]}")
 
         #Prompt needs to be wrapped in tokens 
         prompt = f"{apitools.tokenizer.special_tokens['prompt']}{prompt}{apitools.tokenizer.special_tokens['resp']}"

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
+  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-49NV8NMBJP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());site/project-chat.html
+    gtag('config', 'G-49NV8NMBJP');
+    </script>
+
+
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="modelstyle.css">
+<link rel="stylesheet" href="codeblock.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>A 1B Parameter LLM Project -Part 2</title>
+<meta name="description" content="1B parameters Language Model project - trained from scratch. See how I built it. Try the online chat interface. Part 2.">
+  <style>
+    .hero {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* center horizontally */
+    justify-content: center;
+    margin: 3rem 0;        /* spacing above/below */
+    color: #4a4;
+    
+  }
+    .hero-img {
+  width: 50%;          /* width of image */
+  max-width: 90%;        /* responsive */
+  height: auto;          /* keep aspect ratio */
+  border-radius: 16px;   /* rounded corners */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3); /* subtle lift */
+  margin-bottom: 1.5rem; /* spacing to heading */
+}
+
+    .hero h1 {
+  font-size: 2rem;
+  margin: 0.25rem 0;
+}
+
+    .hero p {
+      font-size: 1.25rem;
+    }
+
+    .image-box {
+    display: inline-block;
+    padding: 6px;
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    width: fit-content;
+    }
+
+    .image-box img {
+    border-radius: 8px;
+    display: block;
+    max-width: 100%;
+    height: auto;
+    }
+    
+    
+    .two-column {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: flex-start;
+      margin: 2rem 0;
+    }
+
+    .column-text, .column-image {
+      flex: 1 1 45%;
+    }
+
+    .column-text {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .column-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .image-caption {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+    
+
+  </style>
+</head>
+<body>
+
+  <!-- Header - Gives mobile better viewability -->
+  <header>
+    <div><strong>Steinshark's Projects</strong></div>
+    <nav class="navbar">
+        <!-- Desktop Menu -->
+        <ul class="menu desktop-menu">
+          <li><a target="_blank" rel="noopener noreferrer" href="index.html">Home</a></li>
+          <li><a target="_blank" rel="noopener noreferrer" href="projects.html">Projects</a></li>
+          <li><a target="_blank" rel="noopener noreferrer" href="chat.html">Chatbot</a></li>
+          <li><a target="_blank" rel="noopener noreferrer" href="project-chat-data.html">Teach Model</a></li>
+        </ul>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu">
+          <ul>
+            <li><a target="_blank" rel="noopener noreferrer" href="index.html" class="mobile-text">Home</a></li>
+            <li><a target="_blank" rel="noopener noreferrer" href="chat.html" class="mobile-text">Chatbot</a></li>
+          </ul>
+        </div>
+      </nav>
+    <div class="code-stream"></div>
+  </header>
+
+  <div class="hero">
+  <img class="hero-img" src="GPU.jpg" alt="SLM Project">
+  <h1>Welcome to the SLM Project</h1>
+  <p>Part 2 - Build a Bigger Model </p>
+</div>
+
+
+  <div class="content">
+    <h2>Intro</h2>    
+    <p>
+      The scale of language models these days goes well beyond a hobbyists capacity to reproduce (<a target="_blank" rel="noopener noreferrer" href='https://en.wikipedia.org/wiki/GPT-4#Background'>GPT-4</a> ~ 1.7T) - requiring thousands of GPUs to train. 
+      This model won't come anywhere close to that - it's purely an experiment for fun! To satisfy ambition, I went for 1 Billion parameters. From interacting with 
+      various <a target="_blank" rel="noopener noreferrer" href="https://huggingface.co/openai-community/gpt2?library=transformers">GPT-2 model sizes</a>, 1B seemed to work for fluency, capability, and could 
+      still run locally without difficulty.  
+    </p>
+<!-- 
+    <div class="image-box">
+        <img src="images/datacenter-thin.jpg" alt="Project Preview">
+    </div>
+ -->
+
+<!-- 
+    <div class="two-column">
+        <div class="column-text">
+            <p>
+                Free, big, fast, and clean is the "choose only 3" setup for data. At first, I left out fast. Weeks were spent downloading Common Crawl pages, adjusting my filter, finding something I missed, and reapeating.
+                Eventually, I gave up on the autonomy and went crawling to <a target="_blank" rel="noopener noreferrer" href="https://huggingface.co/datasets/HuggingFaceFW/fineweb" target="_blank" rel="noopener noreferrer">FineWeb</a>, 
+                a wonderful collection of highly curated English language web pages that did a better job than I ever could at filtering. 
+                For training I grabbed a 450GB subset of the 51.3TB available and got to work.
+            </p>
+
+            <p>
+                Copy-pasting a dataset just didn't fit the vibe of this project,so I went ahead and filtered it further. I took out adult, ad and spam content, filtered short articles, and tossed out anything with a language score of under .93 (<a target="_blank" rel="noopener noreferrer" href='https://huggingface.co/facebook/fasttext-language-identification' target="_blank" rel="noopener no referrer">fasttext</a> classifier score). This chopped the data down to 343GB. 
+                Next, I curated a huge list of whitelist phrases, topics, and genres to include in the final dataset. This led to a massive reduction, around 19% of the first pass text. I sprinkled in some curated <a target="_blank" rel="noopener noreferrer" href="https://data.stackexchange.com/stackoverflow/query/new" target="_blank" rel="noopener noreferrer">StackOverflow</a> posts, <a target="_blank" rel="noopener noreferrer" href="https://www.gutenberg.org/" target="_blank" rel="noopener noreferrer">Project Gutenberg</a> selections, and <a target="_blank" rel="noopener noreferrer" href="https://github.com/chris-lovejoy/youtube-titles-and-transcripts?tab=readme-ov-file" target="_blank" rel="noopener noreferrer">YouTube Transcripts</a>.
+            </p>
+            <p>
+                Finally, I added a massive chunk of Python code from <a target="_blank" rel="noopener noreferrer" href"https://huggingface.co/datasets/bigcode/the-stack" target="_blank" rel="noopener noreferrer"></a>The Stack dataset</a> to massively improve coding skils in 
+                Python related tasks - and to later build a code tool to provide an execution environment for the model's response generation. And also - of course - a set of Wikipedia articles, which I selected based on historic access data such that only consistently visited pages were trained on.         
+            </p>
+        </div>
+        
+        <div class="column-image">
+            <img src="images/webstats.jpeg" alt="Infographic showing internet data usage" />
+            <p class="image-caption">Over 500,000 GB of data is created online every minute.</p>
+        </div>
+    </div>
+ -->
+
+<!-- 
+    <div class="model-container">
+        <div class="model-label">Data Pipeline</div>
+            <div class="embedding-matrix">
+                <div class="embedding-title">FineWeb (450GB)</div>
+            </div>
+
+       
+            <div class="arrow">&#8594;</div>
+        
+            <div class="embedding-matrix">
+                <div class="embedding-title">Remove Bad Content (343GB)</div>
+            </div>
+
+            <div class="arrow">&#8594;</div>
+            
+            <div class="embedding-matrix">
+                <div class="embedding-title">Select Good Content (+TheStack) (93.2GB)</div>
+            </div>
+
+            <div class="arrow">&#8594;</div>
+
+            <div class="embedding-matrix">
+                <div class="embedding-title">Tokenize to 32k Vocab Words</div>
+            </div>
+
+            <div class="arrow">&#8594;</div>
+
+            <div class="model-container">
+                <div class="model-label">Final Set</div>
+    
+                    <div class="embedding-matrix">
+                        <div class="embedding-title">26B tokens</div>
+                    </div>
+        
+            </div>
+
+    </div> -->
+
+
+    <h2>Phase 2 - Design an Architecture</h2>
+    <p>
+      Pytorch is a very familiar framework to me at this point. Countless hours have been spent building everything from <a target="_blank" rel="noopener noreferrer" href="https://github.com/Steinshark/chess" target="_blank" rel="noopener noreferrer">Chess Engines</a> to <a target="_blank" rel="noopener noreferrer" href="https://github.com/Steinshark/ReinforcementLearning" target="_blank" rel="noopener noreferrer">RL Snake-Playing agents</a>. 
+      The transformer architecture was a new one to me, though. I remember distinctly one morning on vacation sitting in the Aqua Aloha Surf hotel in Honolulu, casually parsing over <a target="_blank" rel="noopener noreferrer" href="https://arxiv.org/abs/1706.03762">Attention is All You Need</a> - as one does. 
+      Thus began my deep dive into transformer-based langauge models.
+    </p>
+
+
+    <p>
+      To understand the transformer mechanism, field advancements (RoPE, data/computation/training optimizations, etc...), and exactly what I could do with it took more time. 
+      Given my hardware limitations (RTX 4060Ti 16GB), I took to &le;1B parameter models. 
+      Months of toying around and optimizing compute, memory, and data requirments led me to the following model training as we speak:   
+    </p>
+
+
+    <div class="model-container">
+        <div class="model-label">1B Parameter Model Architecture</div>
+            <div class="embedding-matrix">
+                <div class="embedding-title">Embedding Layer (<span id="n-vocab1"></span> x <span id="n-embed1"></span>)</div>
+                <div class="embedding-grid">
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                </div>
+            </div>
+
+       
+            <div class="arrow">&#8594;</div>
+        
+            <div class="transformer-stack">
+                <div class="stack-title">Stacked Transformer Decoder (<span id="n-layers1"></span>)</div>
+
+                <!-- Repeat this block 16 times for each decoder layer -->
+                <div class="decoder-layer">
+                    <div class="layer-title">Decoder Layer</div>
+                    <div class="layer-block">LayerNorm</div>
+                    <div class="layer-block">Multi-Head Attention</div>
+                    <div class="layer-block">Dropout</div>
+                    <div class="layer-block residual">+ Residual</div>
+                    <div class="layer-block">LayerNorm</div>
+                    <div class="layer-block">Feedforward</div>
+                    <div class="layer-block">Dropout</div>
+                    <div class="layer-block residual">+ Residual</div>
+                </div>
+
+                <!-- Add more decoder-layer blocks as needed -->
+            </div>
+
+            <div class="arrow">&#8594;</div>
+            
+            <div class="embedding-matrix">
+                <div class="embedding-title">LM Head</div>
+                <div class="embedding-grid-T">
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                    <div class="embedding-cell"></div>
+                </div>
+            </div>
+
+    </div>
+<p>
+  Here's some example code from the model.py file where I implemented the architecture. I use Pytorch for the model 
+  which makes for super neat code - I take pride in my work! 
+</p>
+<div class="code-container" id="codeBlock0">
+  <div class="code-header">
+    <span>Multi-Head Attention Code Example</span>
+    <button class="collapse-btn" onclick="toggleCollapse('codeBlock0')">▼</button>
+  </div>
+  <div class="code-content"><code><span class='com'>#Implementation of multi-head attention</span>
+<span class='class'>class MultiHeadAttention(torch.nn.Module):</span>
+    
+    
+    <span class="fn">def __init__(self, embed_dim, num_heads,n_positions, device=torch.device('cuda' if torch.cuda.is_available() else 'cpu'),droput=.2):</span>
+
+        super(MultiHeadAttention, self).__init__()
+        
+        <span class='com'># Initialize parameters</span>
+        self.n_positions        = n_positions
+        self.embed_dim          = embed_dim
+        self.num_heads          = num_heads
+        self.d_k                = embed_dim // num_heads
+        self.device             = device
+
+        <span class='com'># Linear layers for transforming inputs</span>
+        self.layer_1            = torch.nn.Linear(embed_dim,embed_dim*3,bias=True)
+        self.W_o                = torch.nn.Linear(embed_dim, embed_dim,device=device,bias=True)
+        self.scale              = 1 / math.sqrt(self.d_k)
+        self.dropout            = droput
+        self.is_training        = True
+        
+
+    <span class="fn">def forward(self, x:torch.Tensor,attn_mask:torch.Tensor=None):</span>
+        B, N, C         = x.size()
+
+        <span class='com'># Apply linear transformations and split heads</span>
+        Q,K,V           = self.layer_1(x).split(self.embed_dim,dim=2)
+        Q:torch.Tensor  = Q.view(B, N, self.num_heads, self.d_k).transpose(1,2)
+        K:torch.Tensor  = K.view(B, N, self.num_heads, self.d_k).transpose(1,2)
+        V:torch.Tensor  = V.view(B, N, self.num_heads, self.d_k).transpose(1,2)
+
+        <span class='com'># Apply RoPE</span>
+        Q               = apply_rope(Q,N,self.device)
+        K               = apply_rope(K,N,self.device)
+
+        with sdpa_kernel([SDPBackend.EFFICIENT_ATTENTION,SDPBackend.FLASH_ATTENTION,SDPBackend.MATH,SDPBackend.CUDNN_ATTENTION]):
+            attn_mask   = attn_mask.unsqueeze(1).unsqueeze(2)
+            attn_out    = scaled_dot_product_attention(Q,K,V,dropout_p=self.dropout if self.is_training else 0,is_causal=True,scale=self.scale,attn_mask=attn_mask)
+            attn_out    = attn_out.transpose(1,2).contiguous().view(B,N,C)
+            <span class="ret">return self.W_o(attn_out)</span></code></div>
+</div>
+        <!-- Code snippet component (drop into your page) -->
+<div class="code-container" id="codeBlock1">
+  <div class="code-header">
+    <span>Decoder Block Code Example</span>
+    <button class="collapse-btn" onclick="toggleCollapse('codeBlock1')">▼</button>
+  </div>
+  <div class="code-content"><code><span class ="com">#One stack of a decode-transformer layer</span>
+<span class="class">class DecoderLayer(torch.nn.Module):</span>
+
+
+    <span class="fn">def __init__(self,n_embed,n_head,n_positions,n_ff,dropout=.1):</span>
+        super(DecoderLayer,self).__init__()
+        
+        <span class="com">#Self attention layer</span>
+        self.mh_attn                = MultiHeadAttention(n_embed,n_head,n_positions)
+        self.mha_dropout            = torch.nn.Dropout(p=dropout)
+        self.mha_layer_norm         = torch.nn.LayerNorm(n_embed)
+        
+        <span class="com">#Feed Forward layer</span>
+        self.ff_layers              = torch.nn.Sequential(
+            torch.nn.Linear(n_embed,n_ff), 
+            torch.nn.GELU(), 
+            torch.nn.Linear(n_ff,n_embed)) 
+        self.ff_dropout             = torch.nn.Dropout(p=dropout)
+        self.ff_layer_norm          = torch.nn.LayerNorm(n_embed)
+        
+   
+    <span class="fn">def forward(self,x:torch.Tensor,attn_mask:torch.Tensor=None)->torch.Tensor:</span>
+        
+        <span class="com">#Apply layer_norm, MHA, and residual connection</span>
+        attn_output                 = self.mh_attn(self.mha_layer_norm(x),attn_mask=attn_mask)
+        attn_output                 = self.mha_dropout(attn_output)
+        x                           = x + attn_output
+
+        <span class="com">#Apply layer_norm, ff_layer, and residual connection</span>
+        ff_output                   = self.ff_layers(self.ff_layer_norm(x))
+        ff_output                   = self.ff_dropout(ff_output)
+        x                           = x + ff_output
+
+        <span class="ret">return x</span></code></div>
+</div>
+
+
+    <div class="two-column">
+        <div class="column-text">
+          <p>
+            With this model we're off to the races! Using LM head weight-sharing with the embeddings has us just above <span id="param-count2"></span> parameters. 
+            RoPE embeddings are nice to have (no position embeddings needed), and a head dimension of <span id="n-embed-head1"></span> makes for quick but effective training. 
+            Not big, but definitely capable of something! </p>
+          
+          <p>If you're curious about seeing the code you can check it out on my <a target="_blank" rel="noopener noreferrer" href="https://github.com/Steinshark/cloudGPT">Github</a>!</p>
+          </div>
+      <div class="param-box">
+        <h3 class="param-title">Architecture Stats - <span id="param-count1"></span></h3>
+        <div class="param-grid">
+
+            <div class="param-key">Vocab Size:</div>
+            <div class="param-value"><span id="n-vocab2"></span></div>
+
+            <div class="param-key">Number heads:</div>
+            <div class="param-value"><span id="n-heads1"></span></div>
+
+            <div class="param-key">Embed Dims:</div>
+            <div class="param-value"><span id="n-embed2"></span></div>
+
+            <div class="param-key">Num Layers:</div>
+            <div class="param-value"><span id="n-layers2"></span></div>
+
+            <div class="param-key">FF Size:</div>
+            <div class="param-value"><span id="n-ff1"></span></div>
+
+            <div class="param-key">Context Len:</div>
+            <div class="param-value"><span id="n-context1"></span></div>
+        </div>
+      </div>
+      </div>
+
+    <h2>Training!</h2>
+    <p>
+      Training took by far the most time. At first I attempted training locally - at 5k tokens/sec throughput. Quick maths puts us at 60 days per epoch of training. 
+      I was not going to be waiting on that... 
+      I soon gave up on my 4060 and used online compute from LambdaAI.com (not sponsored, highly recommend). For 10 days, the model crunched 50 billion tokens. 
+      And now that brings us to finetuning - the real hard part. 
+    </p>
+    <p>
+      You see, pretraining is easy! Point and go. 
+      Finetuning is the real art of the deal - finding what combination of training steps, techniques, and data will improve the model.
+      Just finding quality datasets was hard enough. 
+      I opted for a crowd sourced approach. 
+      Iterative refinement of the model based on rejecting / accepting prompt pairs. 
+      Please take a minute to contribute - and <a target="_blank" rel="noopener noreferrer" href="project-chat-data.html">see the model </a> in action while youre at it!  
+    </p>
+    <h2>Check Back in Tomorrow for More!</h2>
+    <p>
+      Updates daily on the project! I code as much as I can after work (well into the night, its unhealthy...) to get updates to you. Thanks for reading so far!
+    </p>
+
+
+
+<!-- Button Copy Script -->
+<script>
+  // Copy button behavior
+  (function () {
+    const container = document.currentScript ? document.currentScript.parentElement : document.body;
+    // find all code snippet copy buttons within the document
+    document.querySelectorAll('.code-snippet').forEach(snippet => {
+      const btn = snippet.querySelector('.copy-btn');
+      const codeEl = snippet.querySelector('.code-block code');
+      const feedback = snippet.querySelector('.copy-feedback');
+
+      if (!btn || !codeEl) return;
+
+      btn.addEventListener('click', async () => {
+        try {
+          const text = codeEl.innerText.trim();
+          await navigator.clipboard.writeText(text);
+          feedback.style.opacity = '1';
+          feedback.style.transform = 'translateY(0)';
+          setTimeout(() => {
+            feedback.style.opacity = '0';
+            feedback.style.transform = 'translateY(-2px)';
+          }, 1400);
+        } catch (err) {
+          // fallback: select & execCommand
+          const range = document.createRange();
+          range.selectNodeContents(codeEl);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          try { document.execCommand('copy'); } catch (e) { /* ignore */ }
+          sel.removeAllRanges();
+          feedback.style.opacity = '1';
+          setTimeout(() => feedback.style.opacity = '0', 1400);
+        }
+      });
+    });
+  })();
+</script>
+
+<!-- Button Collapse Script -->
+<script>
+  function toggleCollapse(id) {
+    const block = document.getElementById(id);
+    block.classList.toggle("collapsed");
+    const btn = block.querySelector(".collapse-btn");
+    btn.textContent = block.classList.contains("collapsed") ? "►" : "▼";
+  }
+  toggleCollapse("codeBlock0");
+  toggleCollapse("codeBlock1");
+</script>
+
+
+<script src="codeflow.js"></script>
+
+  <script>
+    const root = document.documentElement;
+    document.getElementById('param-count1').textContent = getComputedStyle(root).getPropertyValue('--model-param-count').trim();
+    document.getElementById('param-count2').textContent = getComputedStyle(root).getPropertyValue('--model-param-count').trim();
+    document.getElementById('n-layers1').textContent = getComputedStyle(root).getPropertyValue('--model-n-layers').trim();
+    document.getElementById('n-layers2').textContent = getComputedStyle(root).getPropertyValue('--model-n-layers').trim();
+    document.getElementById('n-heads1').textContent = getComputedStyle(root).getPropertyValue('--model-n-heads').trim();
+    document.getElementById('n-embed-head1').textContent = getComputedStyle(root).getPropertyValue('--model-n-embed-head').trim();
+    document.getElementById('n-embed1').textContent = getComputedStyle(root).getPropertyValue('--model-n-embed').trim();
+    document.getElementById('n-embed2').textContent = getComputedStyle(root).getPropertyValue('--model-n-embed').trim();
+    document.getElementById('n-ff1').textContent = getComputedStyle(root).getPropertyValue('--model-n-ff').trim();
+    document.getElementById('n-context1').textContent = getComputedStyle(root).getPropertyValue('--model-n-context').trim();
+    document.getElementById('n-vocab1').textContent = getComputedStyle(root).getPropertyValue('--model-n-vocab').trim();
+    document.getElementById('n-vocab2').textContent = getComputedStyle(root).getPropertyValue('--model-n-vocab').trim();
+  </script>
+
+</body>
+</html>

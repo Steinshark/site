@@ -19,12 +19,10 @@ if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
     # === LOAD MODEL & TOKENIZER ===
     tokenizer   = load_tokenizer(TOKENIZER_PATH)
     device      = 'cuda'
-    device      = 'cpu'
     dtype       = torch.bfloat16
-    dtype       = torch.float
     model       = LMSteinshark.from_loadpoint(MODEL_PATH,p_override=0,device=torch.device(device))
     model.device= torch.device(device)
-    model.send_to_cpu()
+    
     # Move to GPU, BF16, eval, no grad
     model = model.eval().to(device, dtype=dtype)
     for p in model.parameters():

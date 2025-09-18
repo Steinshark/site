@@ -155,7 +155,8 @@
     </p>
 
     <p>
-      GPT-1, for starters, was trained on 4.7GB of data - around 1 billion words. That much text would take 11 years for the average Joe to read. And GPT-1 was just a toy model at best.
+      GPT-1 was trained on 4.7GB of data - around a billion words. That much text would take 11 years for the average Joe to read. 
+      Sounds like a lot - but GPT-1 was a toy model at best.
       GPT-2 upped the game to 40GB of text, this time from <a href="https://www.reddit.com/r/rickroll/" target="_blank" rel="noopener noreferrer">Reddit Posts</a>.
       The first recognizably modern model, GPT-3, brought this up to 570GB, 300B tokens, or around 15,000,000 man-hours of reading. 
     </p>
@@ -163,11 +164,13 @@
     <p>
         With this type of scaling in mind, the search for a metric heck ton of data commenced. A balance of quantity and quality was needed, and so I hit the books (spoken the internet). So, how did I tackle this? Lets find out...
     </p>
+    <p>&nbsp;</p>
 
     <div class="two-column">
         <div class="column-text">
+          <h3>The Data</h3>
             <p>
-                Free, big, easy, and clean is the "choose only 3" setup for data. At first, I left out fast. Weeks were spent downloading Common Crawl pages, adjusting my filter, finding something I missed, and reapeating.
+                Free, big, fast, and clean is the "choose only 3" setup for data. At first, I left out fast. Weeks were spent downloading Common Crawl pages, adjusting my filter, finding something I missed, and reapeating.
                 Eventually, I gave up on the autonomy and went crawling to <a href="https://huggingface.co/datasets/HuggingFaceFW/fineweb" target="_blank" rel="noopener noreferrer">FineWeb</a>, 
                 a wonderful collection of highly curated English language web pages that did a better job than I ever could at filtering. 
                 For training I grabbed a 450GB subset of the 51.3TB available and got to work.
@@ -230,203 +233,12 @@
         
             </div>
 
-    </div>
-
-
-    <h2>Phase 2 - Design an Architecture</h2>
-    <p>
-      Pytorch is a very familiar framework to me at this point. Countless hours have been spent building everything from <a href="https://github.com/Steinshark/chess" target="_blank" rel="noopener noreferrer">Chess Engines</a> to <a href="https://github.com/Steinshark/ReinforcementLearning" target="_blank" rel="noopener noreferrer">RL Snake-Playing agents</a>. 
-      The transformer architecture was a new one to me, though. I remember distinctly one morning on vacation sitting in the Aqua Aloha Surf hotel in Honolulu, non-chalantly parsing over <a href="https://arxiv.org/abs/1706.03762">Attention is All You Need</a> - as one does. 
-      Thus began my deep dive into transformer-based langauge models.
-    </p>
-
-    <p>
-      To understand the transformer mechanism, field advancements (RoPE, data/computation/training optimizations, etc...), and exactly what I could do with it took more time. 
-      Given my hardware limitations (RTX 4060Ti 16GB), I took to &le;1B parameter models. 
-      Months of toying around and optimizing compute, memory, and data requirments led me to the following model training as we speak:   
-    </p>
-
-    <div class="model-container">
-        <div class="model-label">Steinshark LM</div>
-            <div class="embedding-matrix">
-                <div class="embedding-title">Embedding Layer (<span id="n-vocab1"></span> x <span id="n-embed1"></span>)</div>
-                <div class="embedding-grid">
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                </div>
-            </div>
-
-       
-            <div class="arrow">&#8594;</div>
-        
-            <div class="transformer-stack">
-                <div class="stack-title">Stacked Transformer Decoder (<span id="n-layers1"></span>)</div>
-
-                <!-- Repeat this block 16 times for each decoder layer -->
-                <div class="decoder-layer">
-                    <div class="layer-title">Decoder Layer</div>
-                    <div class="layer-block">LayerNorm</div>
-                    <div class="layer-block">Multi-Head Attention</div>
-                    <div class="layer-block">Dropout</div>
-                    <div class="layer-block residual">+ Residual</div>
-                    <div class="layer-block">LayerNorm</div>
-                    <div class="layer-block">Feedforward</div>
-                    <div class="layer-block">Dropout</div>
-                    <div class="layer-block residual">+ Residual</div>
-                </div>
-
-                <!-- Add more decoder-layer blocks as needed -->
-            </div>
-
-            <div class="arrow">&#8594;</div>
             
-            <div class="embedding-matrix">
-                <div class="embedding-title">LM Head</div>
-                <div class="embedding-grid-T">
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                    <div class="embedding-cell"></div>
-                </div>
-            </div>
+          </div>
+        <h2 style="text-align: right;"><a href="project-chat-2.html"> Continue to Part 2 →</a></h2>
 
-    </div>
 
-    <div class="param-box">
-    <h3 class="param-title">Model Parameters - <span id="param-count1"></span></h3>
-    <div class="param-grid">
-
-        <div class="param-key">Vocab Size:</div>
-        <div class="param-value"><span id="n-vocab2"></span></div>
-
-        <div class="param-key">Number heads:</div>
-        <div class="param-value"><span id="n-heads1"></span></div>
-
-        <div class="param-key">Embed Dims:</div>
-        <div class="param-value"><span id="n-embed2"></span></div>
-
-        <div class="param-key">Num Layers:</div>
-        <div class="param-value"><span id="n-layers2"></span></div>
-
-        <div class="param-key">FF Size:</div>
-        <div class="param-value"><span id="n-ff1"></span></div>
-
-        <div class="param-key">Context Len:</div>
-        <div class="param-value"><span id="n-context1"></span></div>
-    </div>
     
-</div>
-
-
-    <p>
-      With this model we're off to the races! With the LM head weight-sharing with the embeddings, we are just above <span id="param-count2"></span> parameters. RoPE embeddings are nice to have (no position embeddings needed), and a head dimension of <span id="n-embed-head1"></span> makes for quick but effective training. Not big, but definitely capable of something! </p>
-    </p>
-
-    <h2>Training!</h2>
-    <p>
-      Training by far took the most time. After a few days, I gave up on my 4060 and used online compute from LambdaAI.com (highly recommend). For 10 days, the model crunched 50 billion tokens. 
-      And now that brings us to finetuning - the real hard part. 
-    </p>
-
-    <p>
-      You see, pretraining is easy! Point and go. Finetuning is the real art of the deal - finding what combination of training steps, what data will improve the model, and just finding quality datasets. I opted for a crowd sourced approach. 
-      Iterative refinement of the model based on rejecting / accepting prompt pairs. Please take a minute to contribute - and <a href="project-chat-data.html">see the model </a> in action while youre at it!  
-    </p>
-
-    <h2>Check Back in Tomorrow for More!</h2>
-    <p>
-      Updates daily on the project! I code as much as I can after work (well into the night, its unhealthy...) to get updates to you. Thanks for reading so far!
-    </p>
   
   </div>
   <script src="codeflow.js"></script>

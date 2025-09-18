@@ -5,7 +5,7 @@ html {
     --bg-dark: #121212;
     --text-light: #e0e0e0;
     /*--button-color: linear-gradient(90deg, #00c3ff, #a5d3f8);*/
-    --button-color: linear-gradient(90deg, #4a4, #000);*/
+    --button-color: linear-gradient(90deg, #4a4, #000);
     --panel-dark: #3e494b;
     --card-bg: #1a1a1a;
     --model-param-count: 1B;
@@ -62,14 +62,14 @@ a::after {
   height: 2px;               /* thickness of underline */
   bottom: 0;
   left: 0;
-  background-color: #0969c9; /* underline color */
+  background-color: #fff8dc; /* underline color */
   transition: width 0.3s ease;
   border-radius: 1px;
 }
 
 /* Animate the underline on hover */
 a:hover {
-  color: #0969c9;
+  color: #fff8dc;
 }
 
 a:hover::after {
@@ -123,6 +123,9 @@ a:hover::after {
   color: #4a4;
 }
 .content h2 {
+  color: #4a4;
+}
+.content h3 {
   color: #4a4;
 }
 
