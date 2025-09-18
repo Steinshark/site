@@ -14,12 +14,6 @@
   </url>
 
   <url>
-    <loc>https://Steinshark.github.io/site/story.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
     <loc>https://Steinshark.github.io/site/chat.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -27,6 +21,12 @@
 
   <url>
     <loc>https://Steinshark.github.io/site/project-chat.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://Steinshark.github.io/site/project-chat-2.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
