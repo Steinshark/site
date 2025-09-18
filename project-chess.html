@@ -14,8 +14,9 @@
   <link rel="stylesheet" href="styles.css" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chess Bot Neural Network - By Steinshark</title>
+  <title>Chess Bot Neural Network - A Python Project</title>
   <meta name="description" content="Check out my Chess Bot (it's not very good!). See the code and build one too! How to Code a Chess Neural Network">
+  <link rel="stylesheet" href="styles.css" />
   <style>
     :root {
       --bg-dark: #121212;
@@ -24,7 +25,7 @@
       --button_color: linear-gradient(90deg, #00FFFF, #8A2BE2);
       --panel-dark: #1e1e1e;
     }
-
+/* 
     body {
       margin: 0;
       padding: 0;
@@ -40,7 +41,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
+    } */
 
     nav a {
       color: black;
@@ -48,19 +49,19 @@
       text-decoration: none;
       font-weight: bold;
     }
-
     .hero {
-      position: relative;
-      text-align: center;
-      background: url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
-      height: 60vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      color: white;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-    }
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* center horizontally */
+    justify-content: center;
+    margin: 3rem 0;        /* spacing above/below */
+    color: #fff8dc;
+    
+  }
 
+    
+/* 
     .hero h1 {
       font-size: 3rem;
       margin-bottom: 0.5rem;
@@ -83,14 +84,14 @@
 
     .content p {
       margin-bottom: 1.5rem;
-    }
+    } */
   </style>
 </head>
 <body>
 
   <!-- Header - Gives mobile better viewability -->
   <header>
-    <div><strong>Steinshark's Projects</strong></div>
+    <div><strong>Chess Project</strong></div>
     <nav class="navbar">
         <!-- Desktop Menu -->
         <ul class="menu desktop-menu">
@@ -104,7 +105,6 @@
         <div class="mobile-menu">
           <ul class="menu mobile-menu">
             <li><a href="index.html">Home</a></li>
-            <li><a href="projects.html">Projects</a></li>
             <li><a href="chat.html">Chatbot</a></li>
           </ul>
         </div>
@@ -113,49 +113,22 @@
   </header>
 
   <div class="hero">
-    <h1>Welcome to the SLM Project</h1>
-    <p>Built from scratch. Trained with purpose. Powered by creation.</p>
+    <h1>Welcome to the Chess Project</h1>
+    <p>Built from scratch. Still a Noob.</p>
   </div>
 
   <div class="content">
-    <h2>What is this?</h2>
+    <h2>Project Coming Soon!</h2>
     <p>
-      The Steinshark Language Model (SLM) is a handcrafted AI built using PyTorch from the ground up. It's not just another fine-tuned variant — it's a fully custom transformer implementation designed, trained, and evaluated with one core principle: **value through engineering.**
+      I definitely have a chess project!!! I just haven't done the writeup on it yet... It is on my <a href="https://github.com/Steinshark/chess" target="_blank">Github</a> though!
     </p>
 
-    <h2>Why build your own?</h2>
-    <p>
-      In a world of API-wrapped abstractions, building your own LLM teaches the architecture from first principles. This project aims to educate, inspire, and prove that high-performance models can come from individuals — not just massive labs.
-    </p>
 
-    <h2>What's next?</h2>
-    <p>
-      This site will serve as the hub for live chat demos, dev logs, project breakdowns, and long-form technical writeups. Stay tuned as the model evolves through new data phases, architecture iterations, and deployment stages.
-    </p>
-
-    <h2>Try the Chat Interface</h2>
+    <h2>Try the Chat Interface (in the Meantime)</h2>
     <p>
       Head over to the <a href="./chat.html" style="color: #32CD32; font-weight: bold;">Chat page</a> to interact with the current running version of the SLM. Real-time stats included.
     </p>
   </div>
 
-  <script>
-  // Toggle main mobile menu
-  const toggle = document.querySelector('.menu-toggle');
-  const mobileMenu = document.querySelector('.mobile-menu');
-
-  toggle.addEventListener('click', () => {
-    mobileMenu.classList.toggle('active');
-  });
-
-  // Toggle submenu in mobile menu
-  const mobileSubmenus = document.querySelectorAll('.mobile-menu .has-submenu > a');
-  mobileSubmenus.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      link.parentElement.classList.toggle('active');
-    });
-  });
-</script>
 </body>
 </html>
