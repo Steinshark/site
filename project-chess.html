@@ -4,6 +4,7 @@
   <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-49NV8NMBJP"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>   
   <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -12,11 +13,13 @@
   gtag('config', 'G-49NV8NMBJP');
   </script>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="project-styles.css">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chess Bot Neural Network - A Python Project</title>
   <meta name="description" content="Check out my Chess Bot (it's not very good!). See the code and build one too! How to Code a Chess Neural Network">
   <link rel="stylesheet" href="styles.css" />
+  
   <style>
     :root {
       --bg-dark: #121212;
@@ -25,23 +28,6 @@
       --button_color: linear-gradient(90deg, #00FFFF, #8A2BE2);
       --panel-dark: #1e1e1e;
     }
-/* 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--text-light);
-    }
-
-    header {
-      padding: 1rem;
-      background: var(--accent);
-      color: black;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    } */
 
     nav a {
       color: black;
@@ -49,42 +35,7 @@
       text-decoration: none;
       font-weight: bold;
     }
-    .hero {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;   /* center horizontally */
-    justify-content: center;
-    margin: 3rem 0;        /* spacing above/below */
-    color: #fff8dc;
-    
-  }
 
-    
-/* 
-    .hero h1 {
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .hero p {
-      font-size: 1.25rem;
-    }
-
-    .content {
-      padding: 2rem;
-      max-width: 900px;
-      margin: auto;
-      line-height: 1.6;
-    }
-
-    .content h2 {
-      color: #00ffff;
-    }
-
-    .content p {
-      margin-bottom: 1.5rem;
-    } */
   </style>
 </head>
 <body>
@@ -113,14 +64,103 @@
   </header>
 
   <div class="hero">
+    <img class="hero-img" src="images/coding-project-chess-hero-image.webp" alt="SLM Project">
     <h1>Welcome to the Chess Project</h1>
-    <p>Built from scratch. Still a Noob.</p>
+    <p>Self-Help Chess for Robots</p>
   </div>
 
   <div class="content">
-    <h2>Project Coming Soon!</h2>
+
+    <!-- Intro  -->
+    <h2>Intro</h2>
     <p>
-      I definitely have a chess project!!! I just haven't done the writeup on it yet... It is on my <a href="https://github.com/Steinshark/chess" target="_blank">Github</a> though!
+      I love chess. I play chess all the time (Steinshark on Lichess). 
+      The problem is I suuuuuck at chess. However. I do not suck at programming. 
+      Or machine learning. Or training chess bots, as it turns out ;) 
+    </p>
+    <p>
+        AlphaZero exploded onto the scene in 2017, shaking up the chess content scene 
+        and finally allowing GothamChess to fit magnus AND ai into a single thumbnail. 
+        Claims of blowing stockfish out of the water were rampant, if not a bit misplaced
+        after some simmering down of the scene. In either case, the rise of a self-learning 
+        bot was awesome. I wanted to do it to. Enter the chess project.  
+    </p>
+
+    <!-- Phase 1 Deciphering -->
+    <h2>Phase 1 - Deciphering the Paper </h2>
+    <p>
+        It turns out that the AlphaZero algorithm isn't easy to understand. That kinda makes sense...
+        else we would have just done it earlier than a few years ago. 
+        Civilization has finally made it to the fertile valley of both compute and human creativity. 
+        Reinforcmenet learning takes both of those things. A lot of them. Like seriously a lot of them.
+        But in either case, I had enough of each - at least Nvidia and DeepMind did. So I'll take the piggy back 
+        on the way up.
+    </p>
+
+    <p>
+        Onto the algorithm... The real novel idea here was departing form the traditional wisdom of the alpha-beta pruning trees
+        that DeepBlue used to defeat Kasparov. This was the conventional 
+        wisdom chess bots had been using since time immemorium (the last 50 years). Instead, the team decided to use a Monte Carlo
+        Tree search guided by a neural network. Lets break this down... 
+    </p>
+
+    <h3>The Monte Carlo Tree Search</h3>
+
+    <div class="two-column">
+        <div class="column-text">
+            <p>
+                A Monte Carlo simulation is one in which we have a problem that we know how to simulate but not 
+                how to solve for directly. Heres an example: We want to compute a value for pi. Well, it's not 
+                exactly straightforward to do that. It is <em>extremely</em> easy to randomly place points on a 
+                cartesian coordinate grid. And its easy to calculate \(x^2 + y^2 < r^2\). If we place enough 
+                points, we can estimate - based on the ratio - the area of a circle of radius r. Then we just solve 
+                \(A = \pi r^2\) for \(\pi\)!
+            </p>
+            <p>
+                Easy to observe, hard to calculate directly.
+            </p>
+        </div>
+        
+        <div class="column-image">
+            <img
+            style="max-height: 300px; width: auto; object-fit: contain;" 
+            src="images/monte-carlo-simulation-of-pi.gif" 
+            alt="Monte Carlo Simulation to Approximate pi" 
+            />
+            <p class="image-caption">Monte Carlo simulation to estimate the value of pi.</p>
+        </div>
+    </div>
+
+    <p>
+        Now we just need a clever way to apply that to games. Lets say we're 
+        playing tic-tac-toe. To monte-carlo search tic-tac-toe, I'll just make a tree of all possible move combinations 
+        starting from an empty board. Play out dozens of random games, and well see certain branches have more cumulative 
+        wins than others. These are the better moves. And thus, without any sophsticated methods we have devised a 
+        game plan from simply observing simluated actions.
+    </p>
+
+    <h3>The Neural Network</h3>
+    <p>
+        Unfortunately, theres more nodes in the Chess game tree than there are atoms in the universe. It would seem we cannot 
+        just observe making all these moves. Enter the neural network. Instead of trying to brute force all the moves, lets 
+        try to observe just the ones we think make sense - with a little exploration. A neural network will help guide us down
+        paths that would most likely yield good results for us. THis happens in 2 ways: with poth a policy and a value.  
+    </p>
+
+    <h4>The Policy \(\pi\)</h4>
+    <p>
+        The policy aims to give us the likelihood that we should take move \(a|S\) (read: "a" given S), where a is an action (a move) and S is the 
+        game state (current position, who's turn it is, castling rights). Our motivation is to train the network such that 
+        "good moves" (whatever that means!?) get higher probabilities. This allows us to immediately cue our search down good 
+        moves without doing any other work.
+    </p>
+
+    <h4>The Value \(v\)</h4>
+    <p>
+        In addition to the policy, the network will also yield a value for the given board state. If \(v=1\), then the model 
+        thinks white is winning here. \(v=-1\) means black ought to win, and 0 is a draw. 
+        The value helps give us a way to assign scores to a branch. Given how sparse outcomes are in chess (only 1 per game!),
+        we need a heuristic on the way down.
     </p>
 
 
