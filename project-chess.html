@@ -141,10 +141,10 @@
 
     <h3>The Neural Network</h3>
     <p>
-        Unfortunately, theres more nodes in the Chess game tree than there are atoms in the universe. It would seem we cannot 
-        just observe making all these moves. Enter the neural network. Instead of trying to brute force all the moves, lets 
+        Unfortunately, there's more nodes in the Chess game tree than there are atoms in the universe. It would seem we cannot 
+        just observe making all these moves. Enter the neural network. Instead of trying to brute force all the moves, let's 
         try to observe just the ones we think make sense - with a little exploration. A neural network will help guide us down
-        paths that would most likely yield good results for us. THis happens in 2 ways: with poth a policy and a value.  
+        paths that would most likely yield good results for us. This happens in 2 ways: with both a policy and a value.  
     </p>
 
     <h4>The Policy \(\pi\)</h4>
@@ -159,8 +159,8 @@
     <p>
         In addition to the policy, the network will also yield a value for the given board state. If \(v=1\), then the model 
         thinks white is winning here. \(v=-1\) means black ought to win, and 0 is a draw. 
-        The value helps give us a way to assign scores to a branch. Given how sparse outcomes are in chess (only 1 per game!),
-        we need a heuristic on the way down.
+        The value helps give us a way to assign scores as we search down a branch. Given how sparse outcomes are in chess only checkmates and forced draws,
+        we need a heuristic that applies to non-endstates to feel out a given line.
     </p>
 
 

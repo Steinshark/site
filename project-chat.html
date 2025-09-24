@@ -12,14 +12,15 @@
     gtag('config', 'G-49NV8NMBJP');
     </script>
 
-
 <link rel="stylesheet" href="styles.css" />
 <link rel="stylesheet" href="project-styles.css">
 <link rel="stylesheet" href="modelstyle.css">
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>A 1B Parameter LLM Project</title>
 <meta name="description" content="1B parameters Language Model project - trained from scratch. See how I built it. Try the online chat interface.">
+
+<title>A 1B Parameter LLM Project</title>
   <style>
 
     .image-box {
@@ -38,8 +39,6 @@
     max-width: 100%;
     height: auto;
     }
-
-    
 
   </style>
 </head>
@@ -122,6 +121,7 @@
                 Copy-pasting a dataset just didn't fit the vibe of this project,so I went ahead and filtered it further. I took out adult, ad and spam content, filtered short articles, and tossed out anything with a language score of under .93 (<a href='https://huggingface.co/facebook/fasttext-language-identification' target="_blank" rel="noopener no referrer">fasttext</a> classifier score). This chopped the data down to 343GB. 
                 Next, I curated a huge list of whitelist phrases, topics, and genres to include in the final dataset. This led to a massive reduction, around 19% of the first pass text. I sprinkled in some curated <a href="https://data.stackexchange.com/stackoverflow/query/new" target="_blank" rel="noopener noreferrer">StackOverflow</a> posts, <a href="https://www.gutenberg.org/" target="_blank" rel="noopener noreferrer">Project Gutenberg</a> selections, and <a href="https://github.com/chris-lovejoy/youtube-titles-and-transcripts?tab=readme-ov-file" target="_blank" rel="noopener noreferrer">YouTube Transcripts</a>.
             </p>
+            
             <p>
                 Finally, I added a massive chunk of Python code from <a href"https://huggingface.co/datasets/bigcode/the-stack" target="_blank" rel="noopener noreferrer"></a>The Stack dataset</a> to massively improve coding skils in 
                 Python related tasks - and to later build a code tool to provide an execution environment for the model's response generation. And also - of course - a set of Wikipedia articles, which I selected based on historic access data such that only consistently visited pages were trained on.         
@@ -129,7 +129,9 @@
         </div>
         
         <div class="column-image">
-            <img src="images/webstats.jpeg" alt="Infographic showing internet data usage" />
+            <img    src="images/webstats.jpeg" 
+                    alt="Infographic showing internet data usage" 
+                    style="max-height: 300px; width: auto; object-fit: contain;" />
             <p class="image-caption">Over 500,000 GB of data is created online every minute.</p>
         </div>
     </div>
