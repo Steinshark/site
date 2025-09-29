@@ -133,6 +133,9 @@ a:hover::after {
   margin-bottom: 1.5rem;
 }
 
+h1 {
+  color: #fff8dc;
+}
 /* Header */
 
 /* CODE PANEL */
@@ -181,7 +184,9 @@ header {
 }
 
 header > div strong {
-  color: black;  /* title text black */
+  color: #fff8dc;  /* title text black */
+  font-size: 200%;
+  margin-left: 50%;
 }
 
 
