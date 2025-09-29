@@ -21,9 +21,9 @@ RESPONSES_FILE = "C:/data/cloudGPT/finetune/crowdsource_choices.jsonl"
 
 
 #Load the tokenizer
-TOP_P           = .9
-TEMP            = .8
-N_TOK           = 128
+TOP_P           = .94
+TEMP            = .75
+N_TOK           = 64
 
 PROMPTS         = "D:/Project Chat/data/prompt_responses.json"
 RLHF_RESP       = "D:/Project Chat/data/rlhf_choices.json"
@@ -85,46 +85,16 @@ def serve_chat_request():
     def generate():
         print(f"generating")
         prompt = request.json.get("prompt", "")
+        prompt = f"{apitools.tokenizer.special_tokens['prompt']}{prompt}{apitools.tokenizer.special_tokens['resp']}"
         print(f"user request: {prompt[:100]}")
 
         #Prompt needs to be wrapped in tokens 
-        prompt = f"{apitools.tokenizer.special_tokens['prompt']}{prompt}{apitools.tokenizer.special_tokens['resp']}"
         for token in apitools.generate_tokens(prompt,N_TOK,TEMP,None,TOP_P,verbose=False):  # Replace with your generator
             yield f"data: {token}\n\n"
 
     return Response(stream_with_context(generate()), mimetype='text/event-stream')
 
-    print(f"Recieved chat request")
-    data = request.json
-    request_type = data.get("request_type","")
-
-    if request_type == 'chat':
-        print(f"serving chat")
-        prompt = data.get("prompt", "")
-        conversation_id = data.get("conversation_id")
-        request_ip = request.remote_addr
-
-
-        #Get model output 
-        with torch.no_grad():
-            prompt_as_tok   = tokenizer.encode(prompt).ids
-            output          = model.generate(prompt_as_tok,tokenizer,256,.7,top_k=1000)
-
-        # You would replace this with actual model logic or socket call
-        return_text = tokenizer.decode(output)
-
-        return jsonify({
-            "mode": "return",
-            "return_text": return_text,
-            "conversation_id": conversation_id
-        })
-    # elif request_type == 'stats':
-    #     print(f"serving stats")
-    #     return model_stats()
-    
-    # else:
-    #     print(f"serving unknown")
-
+ 
 @app.route("/api/rlhf-next", methods=['POST'])
 def serve_rlhf_choice():
     data                = {}

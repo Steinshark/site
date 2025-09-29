@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-  <meta name="description" content="Computer science projects of mine that I want to share. Projects include a locally trained and deployed language model. ">
-    
+
+<head>
+
+
+  <title>Projects - Steinshark</title>
+  <meta name="description"
+    content="Computer Science projects for Python - Delve into Python inspired Machine Learning. A collection of my personal projects.">
   <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-49NV8NMBJP"></script>
-    <script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="canonical" href="https://steinshark.github.io/site/projects.html">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-49NV8NMBJP"></script>
+  <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
     gtag('config', 'G-49NV8NMBJP');
-    </script>
-  
+  </script>
+
   <link rel="stylesheet" href="styles.css" />
 
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Projects - Steinshark</title>
   <style>
-
     main {
       max-width: 1200px;
       margin: 2rem auto;
@@ -30,38 +34,38 @@
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 2rem;
     }
-  
+
     .project-card {
       background-color: var(--card-bg);
       border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: row;
       transition: transform 0.2s;
     }
-  
+
     .project-card:hover {
       transform: scale(1.02);
     }
-  
+
     .project-image {
       width: 100%;
       height: 180px;
       object-fit: cover;
       background-color: #2c2c2c;
     }
-  
+
     .project-content {
       padding: 1rem;
       flex-grow: 1;
     }
-  
+
     .project-title {
       font-size: 1.5rem;
       margin: 0.5rem 0;
     }
-  
+
     .project-desc {
       font-size: 0.95rem;
       line-height: 1.5;
@@ -69,95 +73,102 @@
     }
 
     .card-link {
-        display: block;          /* makes the <a> behave like a block */
-        text-decoration: none;   /* remove underline */
-        color: inherit;          /* inherit text color from div */
-        width: 100%;
-        margin-bottom: 1rem;
-        
+      display: block;
+      /* makes the <a> behave like a block */
+      text-decoration: none;
+      /* remove underline */
+      color: inherit;
+      /* inherit text color from div */
+      width: 100%;
+      margin-bottom: 1rem;
+
     }
 
-.card {
-  padding: 1rem;
-  background: #090909;
-  border-radius: 12px;
-  box-shadow: 2px 2px 8px rgba(0,0,0,0.15);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.card-link:hover .card {
-  transform: translateY(-4px);
-  box-shadow: 4px 4px 12px rgba(0,0,0,0.2);
-}
+    .card {
+      padding: 1rem;
+      background: #090909;
+      border-radius: 12px;
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card-link:hover .card {
+      transform: translateY(-4px);
+      box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
+    }
   </style>
-  
-  </head>
+
 </head>
+</head>
+
 <body>
 
   <!-- Header - Gives mobile better viewability -->
   <header>
     <div><strong>Projects</strong></div>
     <nav class="navbar">
-        <!-- Desktop Menu -->
-        <ul class="menu desktop-menu">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="projects.html">Projects</a></li>
-          <li><a href="chat.html">Chatbot</a></li>
-          <li><a href="project-chat-data.html">Teach Model</a></li>
-        </ul>
+      <!-- Desktop Menu -->
+      <ul class="menu desktop-menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="chat.html">Chatbot</a></li>
+        <li><a href="project-chat-data.html">Teach Model</a></li>
+      </ul>
 
-        <!-- Mobile Menu -->
-        <div class="mobile-menu">
-          <ul>
-            <li><a href="index.html" class="mobile-text">Home</a></li>
-            <li><a href="chat.html" class="mobile-text">Chatbot</a></li>
-          </ul>
-        </div>
-      </nav>
-      <div class="code-stream"></div>
-    </header>
-    
+      <!-- Mobile Menu -->
+      <div class="mobile-menu">
+        <ul>
+          <li><a href="index.html" class="mobile-text">Home</a></li>
+          <li><a href="chat.html" class="mobile-text">Chatbot</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="code-stream"></div>
+  </header>
+
   <main>
     <!-- Project Card Template -->
     <a href="./project-chat.html" class="card-link">
-        <div class="card">
-          <img class="project-image" src="images/code.png" alt="SLM Project Preview"/>
-          <div class="project-content">
-            <h2 class="project-title">1 Billion Parameter LLM</h2>
-            <p class="project-desc">
-              My toy LLM built over a few months. 
-              A journey of finding data, hyperparameter tuning, finding large compute, and building a neat UI to interact with it.
-              I coded this one in Pytorch and spent a while actually making things tidy.
-            </p>
-          </div>
+      <div class="card">
+        <img class="project-image" src="images/code.png" alt="SLM Project Preview" />
+        <div class="project-content">
+          <h2 class="project-title">1 Billion Parameter LLM</h2>
+          <p class="project-desc">
+            My toy LLM built over a few months.
+            A journey of finding data, hyperparameter tuning, finding large compute, and building a neat UI to interact
+            with it.
+            I coded this one in Pytorch and spent a while actually making things tidy.
+          </p>
         </div>
+      </div>
     </a>
 
     <!-- Project Card Template -->
     <a href="./project-chess.html" class="card-link">
-        <div class="card">
-          <img class="project-image" src="images/python-chess-coding-project-cover.webp" alt="SLM Project Preview"/>
-          <div class="project-content">
-            <h2 class="project-title">Neural Network Self-Taught Chess Bot</h2>
-            <p class="project-desc">
-              A Python implementation of an RL chess bot. Coded from hand but heavily using 
-              DeepMinds's AlphaZero algorithm. A great project for learning hardware and 
-              optimizing compute given your bottlenecks.
-            </p>
-          </div>
+      <div class="card">
+        <img class="project-image" src="images/python-chess-coding-project-cover.webp" alt="SLM Project Preview" />
+        <div class="project-content">
+          <h2 class="project-title">Neural Network Self-Taught Chess Bot</h2>
+          <p class="project-desc">
+            A Python implementation of an RL chess bot. Coded from hand but heavily using
+            DeepMinds's AlphaZero algorithm. A great project for learning hardware and
+            optimizing compute given your bottlenecks.
+          </p>
         </div>
+      </div>
     </a>
 
-    
+
 
     <!-- Future project cards can be added below using the same structure -->
 
   </main>
- 
-  
+
+
   <!-- Run the Jenny Code Flow on the Header -->
   <script src="codeflow.js"></script>
 
 
 </body>
+
 </html>
