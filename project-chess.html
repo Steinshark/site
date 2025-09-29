@@ -1,175 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-49NV8NMBJP"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>   
-  <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <title>Chess Bot Neural Network - A Python Project</title>
+    <meta name="description"
+        content="Python Chess Bot project from scratch in Pytorch. Reinforcement Learning project tutorial. Learn Pytorch, Chessbots, and more.">
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="canonical" href="https://steinshark.github.io/site/project-chess.html">
 
-  gtag('config', 'G-49NV8NMBJP');
-  </script>
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="project-styles.css">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chess Bot Neural Network - A Python Project</title>
-  <meta name="description" content="Check out my Chess Bot (it's not very good!). See the code and build one too! How to Code a Chess Neural Network">
-  <link rel="stylesheet" href="styles.css" />
-  
-  <style>
-    :root {
-      --bg-dark: #121212;
-      --text-light: #e0e0e0;
-      --accent: linear-gradient(90deg, #00FFFF, #8A2BE2, #32CD32);
-      --button_color: linear-gradient(90deg, #00FFFF, #8A2BE2);
-      --panel-dark: #1e1e1e;
-    }
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-49NV8NMBJP"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-    nav a {
-      color: black;
-      margin: 0 1rem;
-      text-decoration: none;
-      font-weight: bold;
-    }
+        gtag('config', 'G-49NV8NMBJP');
+    </script>
 
-  </style>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="project-styles.css">
+    <link rel="stylesheet" href="styles.css" />
+
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --text-light: #e0e0e0;
+            --accent: linear-gradient(90deg, #00FFFF, #8A2BE2, #32CD32);
+            --button_color: linear-gradient(90deg, #00FFFF, #8A2BE2);
+            --panel-dark: #1e1e1e;
+        }
+
+        nav a {
+            color: black;
+            margin: 0 1rem;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
 </head>
+
 <body>
 
-  <!-- Header - Gives mobile better viewability -->
-  <header>
-    <div><strong>Chess Project</strong></div>
-    <nav class="navbar">
-        <!-- Desktop Menu -->
-        <ul class="menu desktop-menu">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="projects.html">Projects</a></li>
-          <li><a href="chat.html">Chatbot</a></li>
-          <li><a href="project-chat-data.html">Teach Model</a></li>
-        </ul>
+    <!-- Header - Gives mobile better viewability -->
+    <header>
+        <div><strong>Chess Project</strong></div>
+        <nav class="navbar">
+            <!-- Desktop Menu -->
+            <ul class="menu desktop-menu">
+                <li><a href="https://steinshark.github.io/site/index.html">Home</a></li>
+                <li><a href="https://steinshark.github.io/site/projects.html">Projects</a></li>
+                <li><a href="https://steinshark.github.io/site/chat.html">Chatbot</a></li>
+                <li><a href="https://steinshark.github.io/site/project-chat-data.html">Teach Model</a></li>
+            </ul>
 
-        <!-- Mobile Menu -->
-        <div class="mobile-menu">
-          <ul class="menu mobile-menu">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="chat.html">Chatbot</a></li>
-          </ul>
-        </div>
-      </nav>
-    <div class="code-stream"></div>
-  </header>
+            <!-- Mobile Menu -->
+            <div class="mobile-menu">
+                <ul class="menu mobile-menu">
+                    <li><a href="https://steinshark.github.io/site/index.html">Home</a></li>
+                    <li><a href="https://steinshark.github.io/site/chat.html">Chatbot</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="code-stream"></div>
+    </header>
 
-  <div class="hero">
-    <img class="hero-img" src="images/coding-project-chess-hero-image.webp" alt="SLM Project">
-    <h1>Welcome to the Chess Project</h1>
-    <p>Self-Help Chess for Robots</p>
-  </div>
-
-  <div class="content">
-
-    <!-- Intro  -->
-    <h2>Intro</h2>
-    <p>
-      I love chess. I play chess all the time (Steinshark on Lichess). 
-      The problem is I suuuuuck at chess. However. I do not suck at programming. 
-      Or machine learning. Or training chess bots, as it turns out ;) 
-    </p>
-    <p>
-        AlphaZero exploded onto the scene in 2017, shaking up the chess content scene 
-        and finally allowing GothamChess to fit magnus AND ai into a single thumbnail. 
-        Claims of blowing stockfish out of the water were rampant, if not a bit misplaced
-        after some simmering down of the scene. In either case, the rise of a self-learning 
-        bot was awesome. I wanted to do it to. Enter the chess project.  
-    </p>
-
-    <!-- Phase 1 Deciphering -->
-    <h2>Phase 1 - Deciphering the Paper </h2>
-    <p>
-        It turns out that the AlphaZero algorithm isn't easy to understand. That kinda makes sense...
-        else we would have just done it earlier than a few years ago. 
-        Civilization has finally made it to the fertile valley of both compute and human creativity. 
-        Reinforcmenet learning takes both of those things. A lot of them. Like seriously a lot of them.
-        But in either case, I had enough of each - at least Nvidia and DeepMind did. So I'll take the piggy back 
-        on the way up.
-    </p>
-
-    <p>
-        Onto the algorithm... The real novel idea here was departing form the traditional wisdom of the alpha-beta pruning trees
-        that DeepBlue used to defeat Kasparov. This was the conventional 
-        wisdom chess bots had been using since time immemorium (the last 50 years). Instead, the team decided to use a Monte Carlo
-        Tree search guided by a neural network. Lets break this down... 
-    </p>
-
-    <h3>The Monte Carlo Tree Search</h3>
-
-    <div class="two-column">
-        <div class="column-text">
-            <p>
-                A Monte Carlo simulation is one in which we have a problem that we know how to simulate but not 
-                how to solve for directly. Heres an example: We want to compute a value for pi. Well, it's not 
-                exactly straightforward to do that. It is <em>extremely</em> easy to randomly place points on a 
-                cartesian coordinate grid. And its easy to calculate \(x^2 + y^2 < r^2\). If we place enough 
-                points, we can estimate - based on the ratio - the area of a circle of radius r. Then we just solve 
-                \(A = \pi r^2\) for \(\pi\)!
-            </p>
-            <p>
-                Easy to observe, hard to calculate directly.
-            </p>
-        </div>
-        
-        <div class="column-image">
-            <img
-            style="max-height: 300px; width: auto; object-fit: contain;" 
-            src="images/monte-carlo-simulation-of-pi.gif" 
-            alt="Monte Carlo Simulation to Approximate pi" 
-            />
-            <p class="image-caption">Monte Carlo simulation to estimate the value of pi.</p>
-        </div>
+    <div class="hero">
+        <img class="hero-img" src="images/coding-project-chess-hero-image.webp" alt="SLM Project">
+        <h1>Welcome to the Chess Project</h1>
+        <p>Self-Help Chess for Robots</p>
     </div>
 
-    <p>
-        Now we just need a clever way to apply that to games. Lets say we're 
-        playing tic-tac-toe. To monte-carlo search tic-tac-toe, I'll just make a tree of all possible move combinations 
-        starting from an empty board. Play out dozens of random games, and well see certain branches have more cumulative 
-        wins than others. These are the better moves. And thus, without any sophsticated methods we have devised a 
-        game plan from simply observing simluated actions.
-    </p>
+    <div class="content">
 
-    <h3>The Neural Network</h3>
-    <p>
-        Unfortunately, there's more nodes in the Chess game tree than there are atoms in the universe. It would seem we cannot 
-        just observe making all these moves. Enter the neural network. Instead of trying to brute force all the moves, let's 
-        try to observe just the ones we think make sense - with a little exploration. A neural network will help guide us down
-        paths that would most likely yield good results for us. This happens in 2 ways: with both a policy and a value.  
-    </p>
+        <!-- Intro  -->
+        <h2>Intro</h2>
+        <p>
+            I love chess. I play chess all the time (Steinshark on Lichess).
+            The problem is I suuuuuck at chess. However. I do not suck at programming.
+            Or machine learning. Or training chess bots, as it turns out ;)
+        </p>
+        <p>
+            AlphaZero exploded onto the scene in 2017, shaking up the chess content scene
+            and finally allowing GothamChess to fit magnus <i>and</i> AI into a single thumbnail!
+            Claims of blowing Stockfish out of the water were rampant, if not a bit overhyped.
+            After some simmering down, Stockfish regained the crown, butn either case the rise of a self-learning
+            bot was awesome. I wanted to do it to. Enter the chess project.
+        </p>
 
-    <h4>The Policy \(\pi\)</h4>
-    <p>
-        The policy aims to give us the likelihood that we should take move \(a|S\) (read: "a" given S), where a is an action (a move) and S is the 
-        game state (current position, who's turn it is, castling rights). Our motivation is to train the network such that 
-        "good moves" (whatever that means!?) get higher probabilities. This allows us to immediately cue our search down good 
-        moves without doing any other work.
-    </p>
+        <!-- Phase 1 Deciphering -->
+        <h2>Phase 1 - Deciphering the Paper </h2>
+        <p>
+            It turns out that the AlphaZero algorithm isn't easy to understand. That kinda makes sense...
+            else we would have just done much earlier.
+            The explosion of high capacity compute has only recently enabled Reinforcmenet Learning to take off.
+            RL requires a lot of compute. Like seriously a lot.
+            Now, around 8 years later, my laptop should suffice for training at least a semi-competent chess playing
+            bot.
+            With that, lets's dive into the paper!
+        </p>
 
-    <h4>The Value \(v\)</h4>
-    <p>
-        In addition to the policy, the network will also yield a value for the given board state. If \(v=1\), then the model 
-        thinks white is winning here. \(v=-1\) means black ought to win, and 0 is a draw. 
-        The value helps give us a way to assign scores as we search down a branch. Given how sparse outcomes are in chess only checkmates and forced draws,
-        we need a heuristic that applies to non-endstates to feel out a given line.
-    </p>
+        <p>
+            The self-learning algorithm was a departure from traditional methods of high capacity, low information
+            search.
+            The novel idea introduced by DeepMind was discarding Alpha-Beta search trees to find a more
+            compute-efficient
+            means of exploring chess lines - which explode rapidly as we go down in depth. A large neural network was
+            trained
+            to provide a high quality assessment of a position - not quite enough for high level play - but one which
+            combined
+            with an optimized search would yield strong play. In short, we're putting all our effort into making a
+            really good board
+            heuristic so we can focus our search on far fewer but more promising lines.
+        </p>
 
+        <h3>The Monte Carlo Tree Search</h3>
 
-    <h2>Check for More Next Time!</h2>
-    <p>
-      Next iteration, we'll check out how the monte carlo algorithm utilizes the policy and the value to search a given 
-      board state. We'll also find out how we decide which moves are "good" using this algorithm! 
-    </p>
-  </div>
+        <div class="two-column">
+            <div class="column-text">
+                <p>
+                    AlphaZero searched positions using a Monte Carlo Tree. It builds a tree of lines resulting from a
+                    root node (the one we're analyzing), but searches it differently. To understand it, let's first talk
+                    about Monte Carlo simulations, then see how we can apply it to chess.
+                </p>
+                <p>
+                    A Monte Carlo simulation is one in which we have a problem that we know how to simulate but not
+                    how to solve for directly. Heres an example: We want to compute a value for \(\pi\). Well, it's not
+                    exactly straightforward to do that. However, it's <em>extremely</em> easy to randomly place points
+                    on a
+                    cartesian coordinate grid, calculate if \(x_i^2 + y_i^2 < r^2\), and estimate based on ratios the
+                        area of a circle with radius \(r\). If we place enough points, we can just solve \(A=\pi r^2\)
+                        for \(\pi\)! </p>
+                        <p>
+                            By being smart about the problem we simulate, and being a bit clever in how we interpret the
+                            observed outcomes,
+                            we can infer solutions to the problem in question.
+                        </p>
+            </div>
+
+            <div class="column-image">
+                <img style="max-height: 300px; width: auto; object-fit: contain;"
+                    src="images/monte-carlo-simulation-of-pi.gif" alt="Monte Carlo Simulation to Approximate pi" />
+                <p class="image-caption">Monte Carlo simulation to estimate the value of pi.</p>
+            </div>
+        </div>
+
+        <p>
+            Now we just need a clever way to apply that to games. Let's say we're
+            playing tic-tac-toe. To apply Monte Carlo search it, I'll just make a tree of all possible move
+            combinations starting from an empty board, play out dozens of random games, and we'll observe
+            that certain branches have more cumulative wins than others.
+            These we say are the better moves. And thus, without any sophsticated methods, we have devised a
+            game plan from simply observing simluated actions. This method is called Monte Carlo Tree Search, or MCTS.
+        </p>
+
+        <h3>The Chess Problem</h3>
+        <p>
+            Unfortunately for us, there are more Chess positions than there are atoms in the universe. This makes
+            building a tree of random games either impossible or incomplete and not particularly useful.
+            Our solution to this is to be <em>highly</em> particular as to which positions we explore.
+            If we can find a way to estimate how good a position is then we can cue our search down only
+            good lines and avoid wasting compute on less useful ones.
+        </p>
+        <h3>The Neural Network</h3>
+        <p>
+            The way we pull this off is with a large neural network that we train to approximate how good the lines
+            are for a given board position (\(S\)) that we feed it. This network then outputs 2 values:
+            a policy (\(\pi\)) and a value (\(v\)).
+        </p>
+
+        <h4>The Policy \(\pi\): [Vector] <\(p_1,p_2,p_3,...,p_n\)>
+        </h4>
+        <p>
+            A policy vector is generated for each position that aims to give us the likelihood that we should
+            take move \(a\) for each move possible in \(S\). Our motivation is to train the network such that
+            good moves get higher probabilities. This provides quality information about where to start searching
+            even before exploring any of the possible lines. Enough training of the network and these values
+            become highly accurate, predicting the top engine move around 50% of the time with no search performed.
+        </p>
+
+        <h4>The Value \(v\): [Float] \(v_S\)</h4>
+        <p>
+            The network will also yield a value \(v\) for each \(S\) - unless \(S\) is an endstate in which case we use
+            the actual outcome. \(v\) is clipped from -1 to 1, being interpreted
+            in the same way as a traditional engine evaluation would be. A higher value means better odds for white,
+            and a negative value means better odds for black. The value gives us a way to assign scores as we search
+            down a
+            branch of moves. Because outcomes are so sparse in chess, we need a heuristic that applies to non-endstates
+            so we can add up the values as we explore down a tree.
+        </p>
+
+        <h3>The PUCT Algorithm</h3>
+        <p>
+            The final piece in performing MCTS is deciding which lines to search in a given position.
+            Now that we have some predictors to help guide us, we'll fit them together using a scoring system called
+            PUCT (Polynomial Upper Confidence Tree). Search on a position is performed a given number of times
+            (800 used in the paper). Each iter, we calculate a score for each \(a\) that encourages searching moves that
+            are
+            either promising or currently under-explored. The move with the highest score is selected for search, all
+            PUCT values are
+            recomputed based on the results, and we repeat n_iter times. Here's the formula used, lets break it down.
+        </p>
+
+        <!-- <h5 style="text-align: center;">PUCT Formula - Computed for Each Move</h5> -->
+        <p style="text-align: center; margin: 0px; padding: 0px;">
+            \(PUCT(S,a) = Q(S,a) + c_{\text{puct}} \cdot P(S,a) \cdot \frac{\sqrt{N(S)}}{1 + N(S,a)}\)
+        </p>
+        <ul style="margin-left: 2rem; margin-top: 1rem; text-align: center;">
+            <li>\(Q(S,a)\) - the sum of all \(v\)'s discovered after taking move \(a\)</li>
+            <li>\(c_\text{puct}\) - a constant used to adjust exploration vs exploitation</li>
+            <li>\(P(S,a)\) - the probability assigned to this move by the model</li>
+            <li>\(N(S)\) - number of iterations run so far (down <em>any</em> move)</li>
+            <li>\(N(S,a)\) - number of iterations down \(a\) epecifically</li>
+        </ul>
+        <p>
+            As you can see, more promising moves (based on higher \(Q(S,a)\) or \(P(S,a)\)) will get higher scores - and
+            well search
+            them more. Additionally, neglecting a line will push up its \(\frac{\sqrt{N(S)}}{1 + N(S,a)}\) value, and
+            we'll be sure
+            to not leave any move completely unexplored.
+        </p>
+
+        <h3>Making a Move</h3>
+        <p>
+            After running our search iterations, we interpret the moves based on visit counts. The more a move was
+            visited
+            the more its probability value and its observed outcomes outweighed those of other moves. If we're in an
+            exploratory mood
+            (i.e. during training), then we normalize the move counts and sample the next move using the resulting
+            vector as weights.
+            If we want just the best move then we just pick the most visited move.
+        </p>
+
+        <h3>Training</h3>
+        <p>
+            To effectively train the network from scratch, the model plays games against itself and accumulates a
+            dataset of (\(S\),\(\pi\),\(z\)),
+            where \(z\) is the observed outcome of the game. Once we've generated thousands of games, we train the model
+            to produce a policy
+            that mimicks the observed \(pi\) and values that mimick \(z\).
+        </p>
+        <p>
+            Two things of note here: during search, both \(pi\) and \(v\) are useless.
+            All signal comes from explorations that had actual endgames in their trees.
+            This is the only thing that would cause meaningful nudges towards preferring
+            those lines. Training is thus initially very slow, and hundreds of thousands of positions are required to
+            bootstrap the model.
+        </p>
+        <p>
+            Second, noise is introduced by training the model to predict the final game outcome for all positions in
+            that game. I.e. even
+            the opening move is trained on the outcome which may be completely unrelated. This is mitigated, though,
+            because if that position
+            indeed had nothing to do with the endgame it would be trained an equal number of White and Black wins - thus
+            the noise gets
+            cancelled out.
+        </p>
+
+        <h2>Continue on to Part 2</h2>
+        <p>
+            Next iteration, we'll build the algorithm in Python!
+        </p>
+
+        <h2 style="text-align: right;"><a href="https://steinshark.github.io/site/project-chess-2.html"> Continue to
+                Part 2 →</a></h2>
+    </div>
 
 </body>
+
 </html>

@@ -1,161 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
-  
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-49NV8NMBJP"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-49NV8NMBJP');
+
+    <title>LLM Project from Scratch - A Python Project</title>
+    <meta name="description"
+        content="Coding a Language Model from scratch in Python - 1B parameter LLM in Pytorch - Project and How-To. Learn data processing, MHA, Pretraining.">
+    <meta charset="UTF-8" />
+    <link rel="canonical" href="https://steinshark.github.io/site/project-chat.html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-49NV8NMBJP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-49NV8NMBJP');
     </script>
 
-<link rel="stylesheet" href="styles.css" />
-<link rel="stylesheet" href="project-styles.css">
-<link rel="stylesheet" href="modelstyle.css">
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="project-styles.css">
+    <link rel="stylesheet" href="modelstyle.css">
 
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="1B parameters Language Model project - trained from scratch. See how I built it. Try the online chat interface.">
 
-<title>A 1B Parameter LLM Project</title>
-  <style>
+    <style>
+        .image-box {
+            display: inline-block;
+            padding: 6px;
+            border: 2px solid #ccc;
+            border-radius: 12px;
+            background-color: #f9f9f9;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+            width: fit-content;
+        }
 
-    .image-box {
-    display: inline-block;
-    padding: 6px;
-    border: 2px solid #ccc;
-    border-radius: 12px;
-    background-color: #f9f9f9;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
-    width: fit-content;
-    }
-
-    .image-box img {
-    border-radius: 8px;
-    display: block;
-    max-width: 100%;
-    height: auto;
-    }
-
-  </style>
+        .image-box img {
+            border-radius: 8px;
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
+
 <body>
 
-  <!-- Header - Gives mobile better viewability -->
-  <header>
-    <div><strong>Steinshark's Projects</strong></div>
-    <nav class="navbar">
-        <!-- Desktop Menu -->
-        <ul class="menu desktop-menu">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="projects.html">Projects</a></li>
-          <li><a href="chat.html">Chatbot</a></li>
-          <li><a href="project-chat-data.html">Teach Model</a></li>
-        </ul>
+    <!-- Header - Gives mobile better viewability -->
+    <header>
+        <div><strong>Steinshark's Projects</strong></div>
+        <nav class="navbar">
 
-        <!-- Mobile Menu -->
-        <div class="mobile-menu">
-          <ul>
-            <li><a href="index.html" class="mobile-text">Home</a></li>
-            <li><a href="chat.html" class="mobile-text">Chatbot</a></li>
-          </ul>
-        </div>
-      </nav>
-    <div class="code-stream"></div>
-  </header>
+            <!-- Desktop Menu -->
+            <ul class="menu desktop-menu">
+                <li><a href="https://steinshark.github.io/site/index.html">Home</a></li>
+                <li><a href="https://steinshark.github.io/site/projects.html">Projects</a></li>
+                <li><a href="https://steinshark.github.io/site/chat.html">Chatbot</a></li>
+                <li><a href="https://steinshark.github.io/site/project-chat-data.html">Teach Model</a></li>
+            </ul>
 
-  <div class="hero">
-    <img class="hero-img" src="GPU.jpg" alt="SLM Project">
-    <h1>Welcome to the SLM Project</h1>
-    <p>My Finest Language Model Yet</p>
-  </div>
+            <!-- Mobile Menu -->
+            <div class="mobile-menu">
+                <ul>
+                    <li><a href="https://steinshark.github.io/site/index.html" class="mobile-text">Home</a></li>
+                    <li><a href="https://steinshark.github.io/site/chat.html" class="mobile-text">Chatbot</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="code-stream"></div>
+    </header>
 
-  <div class="content">
-    <h2>Intro</h2>
-    <p>
-      Anyone remember <a href="https://www.cleverbot.com/?say=Steinshark sent me!" target="_blank" rel="noopener noreferrer">Cleverbot</a>? For a lot of us, this was our first intro to semi-intelligent autonomous chatting. 
-      Now I know the inner-workings behind it are nothing like an LLM - but it was an intriguing experience to engage with a non-human agent. 
-      That fascination persisted, and after I saw a few classmates playing with <a href="https://en.wikipedia.org/wiki/GPT-1" target="_blank" rel="noopener noreferrer">GPT-1</a> for their NLP class, I was hooked on the idea of making my own.  
-    </p>
-    <p>
-      At this point, no novel idea of mine will have the compute behind it to make the next ChatGPT, but I'd like to have some fun along the way and make something of substance at the very least. Enter SLM - the Steinshark Language Model. 
-    </p>
-
-    <div class="image-box">
-        <img src="images/datacenter-thin.jpg" alt="Project Preview">
+    <div class="hero">
+        <img class="hero-img" src="GPU.jpg" alt="SLM Project">
+        <h1>Welcome to the SLM Project</h1>
+        <p>My Finest Chatbot Yet</p>
     </div>
 
-    <h2>Phase 1 - Curate the Data</h2>
-    <p>
-      Data is a lucrative field these days. To be sure, there is plenty of free data out there. The <a href="https://commoncrawl.org/" target="_blank" rel="noopener noreferrer">Common Crawl</a> is the entire internet - for free. 
-      They even cleaned up the html to give you the text underneath! But the problem with this data is noise. And there is plenty of noise on the internet... 
-      High quality data is what we're really searching for. And to train a decent model, we need a lot of it. 
-    </p>
+    <div class="content">
+        <h2>Intro</h2>
+        <p>
+            Anyone remember <a href="https://www.cleverbot.com/?say=Steinshark sent me!" target="_blank"
+                rel="noopener noreferrer">Cleverbot</a>? For a lot of us, this was our first intro to semi-intelligent
+            autonomous chatting.
+            Now I know the inner-workings behind it are nothing like an LLM - but it was an intriguing experience to
+            engage with a non-human agent.
+            That fascination persisted, and after I saw a few classmates playing with <a
+                href="https://en.wikipedia.org/wiki/GPT-1" target="_blank" rel="noopener noreferrer">GPT-1</a> for their
+            NLP class, I was hooked on the idea of making my own.
+        </p>
+        <p>
+            At this point, no novel idea of mine will have the compute behind it to make the next ChatGPT, but I'd like
+            to have some fun along the way and make something of substance at the very least. Enter SLM - the Steinshark
+            Language Model.
+        </p>
 
-    <p>
-      GPT-1 was trained on 4.7GB of data - around a billion words. That much text would take 11 years for the average Joe to read. 
-      Sounds like a lot - but GPT-1 was a toy model at best.
-      GPT-2 upped the game to 40GB of text, this time from <a href="https://www.reddit.com/r/rickroll/" target="_blank" rel="noopener noreferrer">Reddit Posts</a>.
-      The first recognizably modern model, GPT-3, brought this up to 570GB, 300B tokens, or around 15,000,000 man-hours of reading. 
-    </p>
-
-    <p>
-        With this type of scaling in mind, the search for a metric heck ton of data commenced. A balance of quantity and quality was needed, and so I hit the books (spoken the internet). So, how did I tackle this? Lets find out...
-    </p>
-    <p>&nbsp;</p>
-
-    <div class="two-column">
-        <div class="column-text">
-          <h3>The Data</h3>
-            <p>
-                Free, big, fast, and clean is the "choose only 3" setup for data. At first, I left out fast. Weeks were spent downloading Common Crawl pages, adjusting my filter, finding something I missed, and reapeating.
-                Eventually, I gave up on the autonomy and went crawling to <a href="https://huggingface.co/datasets/HuggingFaceFW/fineweb" target="_blank" rel="noopener noreferrer">FineWeb</a>, 
-                a wonderful collection of highly curated English language web pages that did a better job than I ever could at filtering. 
-                For training I grabbed a 450GB subset of the 51.3TB available and got to work.
-            </p>
-
-            <p>
-                Copy-pasting a dataset just didn't fit the vibe of this project,so I went ahead and filtered it further. I took out adult, ad and spam content, filtered short articles, and tossed out anything with a language score of under .93 (<a href='https://huggingface.co/facebook/fasttext-language-identification' target="_blank" rel="noopener no referrer">fasttext</a> classifier score). This chopped the data down to 343GB. 
-                Next, I curated a huge list of whitelist phrases, topics, and genres to include in the final dataset. This led to a massive reduction, around 19% of the first pass text. I sprinkled in some curated <a href="https://data.stackexchange.com/stackoverflow/query/new" target="_blank" rel="noopener noreferrer">StackOverflow</a> posts, <a href="https://www.gutenberg.org/" target="_blank" rel="noopener noreferrer">Project Gutenberg</a> selections, and <a href="https://github.com/chris-lovejoy/youtube-titles-and-transcripts?tab=readme-ov-file" target="_blank" rel="noopener noreferrer">YouTube Transcripts</a>.
-            </p>
-            
-            <p>
-                Finally, I added a massive chunk of Python code from <a href"https://huggingface.co/datasets/bigcode/the-stack" target="_blank" rel="noopener noreferrer"></a>The Stack dataset</a> to massively improve coding skils in 
-                Python related tasks - and to later build a code tool to provide an execution environment for the model's response generation. And also - of course - a set of Wikipedia articles, which I selected based on historic access data such that only consistently visited pages were trained on.         
-            </p>
+        <div class="image-box">
+            <img src="images/datacenter-thin.jpg" alt="Project Preview">
         </div>
-        
-        <div class="column-image">
-            <img    src="images/webstats.jpeg" 
-                    alt="Infographic showing internet data usage" 
+
+        <h2>Phase 1 - Curate the Data</h2>
+        <p>
+            Data is a lucrative field these days. To be sure, there is plenty of free data out there. The <a
+                href="https://commoncrawl.org/" target="_blank" rel="noopener noreferrer">Common Crawl</a> is the entire
+            internet - for free.
+            They even cleaned up the html to give you the text underneath! But the problem with this data is noise. And
+            there is plenty of noise on the internet...
+            High quality data is what we're really searching for. And to train a decent model, we need a lot of it.
+        </p>
+
+        <p>
+            GPT-1 was trained on 4.7GB of data - around a billion words. That much text would take 11 years for the
+            average Joe to read.
+            Sounds like a lot - but GPT-1 was a toy model at best.
+            GPT-2 upped the game to 40GB of text, this time from <a href="https://www.reddit.com/r/rickroll/"
+                target="_blank" rel="noopener noreferrer">Reddit Posts</a>.
+            The first recognizably modern model, GPT-3, brought this up to 570GB, 300B tokens, or around 15,000,000
+            man-hours of reading.
+        </p>
+
+        <p>
+            With this type of scaling in mind, the search for a metric heck ton of data commenced. A balance of quantity
+            and quality was needed, and so I hit the books (spoken the internet). So, how did I tackle this? Lets find
+            out...
+        </p>
+        <p>&nbsp;</p>
+
+        <div class="two-column">
+            <div class="column-text">
+                <h3>The Data</h3>
+                <p>
+                    Free, big, fast, and clean is the "choose only 3" setup for data. At first, I left out fast. Weeks
+                    were spent downloading Common Crawl pages, adjusting my filter, finding something I missed, and
+                    reapeating.
+                    Eventually, I gave up on the autonomy and went crawling to <a
+                        href="https://huggingface.co/datasets/HuggingFaceFW/fineweb" target="_blank"
+                        rel="noopener noreferrer">FineWeb</a>,
+                    a wonderful collection of highly curated English language web pages that did a better job than I
+                    ever could at filtering.
+                    For training I grabbed a 450GB subset of the 51.3TB available and got to work.
+                </p>
+
+                <p>
+                    Copy-pasting a dataset just didn't fit the vibe of this project,so I went ahead and filtered it
+                    further. I took out adult, ad and spam content, filtered short articles, and tossed out anything
+                    with a language score of under .93 (<a
+                        href='https://huggingface.co/facebook/fasttext-language-identification' target="_blank"
+                        rel="noopener no referrer">fasttext</a> classifier score). This chopped the data down to 343GB.
+                    Next, I curated a huge list of whitelist phrases, topics, and genres to include in the final
+                    dataset. This led to a massive reduction, around 19% of the first pass text. I sprinkled in some
+                    curated <a href="https://data.stackexchange.com/stackoverflow/query/new" target="_blank"
+                        rel="noopener noreferrer">StackOverflow</a> posts, <a href="https://www.gutenberg.org/"
+                        target="_blank" rel="noopener noreferrer">Project Gutenberg</a> selections, and <a
+                        href="https://github.com/chris-lovejoy/youtube-titles-and-transcripts?tab=readme-ov-file"
+                        target="_blank" rel="noopener noreferrer">YouTube Transcripts</a>.
+                </p>
+
+                <p>
+                    Finally, I added a massive chunk of Python code from <a
+                        href"https://huggingface.co/datasets/bigcode/the-stack" target="_blank"
+                        rel="noopener noreferrer"></a>The Stack dataset</a> to massively improve coding skils in
+                    Python related tasks - and to later build a code tool to provide an execution environment for the
+                    model's response generation. And also - of course - a set of Wikipedia articles, which I selected
+                    based on historic access data such that only consistently visited pages were trained on.
+                </p>
+            </div>
+
+            <div class="column-image">
+                <img src="images/webstats.jpeg" alt="Infographic showing internet data usage"
                     style="max-height: 300px; width: auto; object-fit: contain;" />
-            <p class="image-caption">Over 500,000 GB of data is created online every minute.</p>
+                <p class="image-caption">Over 500,000 GB of data is created online every minute.</p>
+            </div>
         </div>
-    </div>
 
-    <p>
-        The key here is that every bit of noise we take out programmatically is noise the model doesn't have to waste parameters on to filter out. Was the weeks-long data curation process worth it? Who knows! 
-        Lesson learned about pre-mature optimization, I guess. 
-    </p>
+        <p>
+            The key here is that every bit of noise we take out programmatically is noise the model doesn't have to
+            waste parameters on to filter out. Was the weeks-long data curation process worth it? Who knows!
+            Lesson learned about pre-mature optimization, I guess.
+        </p>
 
-    <div class="model-container">
-        <div class="model-label">Data Pipeline</div>
+        <div class="model-container">
+            <div class="model-label">Data Pipeline</div>
             <div class="embedding-matrix">
                 <div class="embedding-title">FineWeb (450GB)</div>
             </div>
 
-       
+
             <div class="arrow">&#8594;</div>
-        
+
             <div class="embedding-matrix">
                 <div class="embedding-title">Remove Bad Content (343GB)</div>
             </div>
 
             <div class="arrow">&#8594;</div>
-            
+
             <div class="embedding-matrix">
                 <div class="embedding-title">Select Good Content (+TheStack) (93.2GB)</div>
             </div>
@@ -170,57 +208,59 @@
 
             <div class="model-container">
                 <div class="model-label">Final Set</div>
-    
-                    <div class="embedding-matrix">
-                        <div class="embedding-title">26B tokens</div>
-                    </div>
-        
+
+                <div class="embedding-matrix">
+                    <div class="embedding-title">26B tokens</div>
+                </div>
+
             </div>
 
-            
-          </div>
-        <h2 style="text-align: right;"><a href="project-chat-2.html"> Continue to Part 2 →</a></h2>
+
+        </div>
+        <h2 style="text-align: right;"><a href="https://steinshark.github.io/site/project-chat-2.html"> Continue to Part
+                2 →</a></h2>
 
 
-    
-  
-  </div>
-  <script src="codeflow.js"></script>
 
-  <script>
-    const root = document.documentElement;
-    document.getElementById('param-count1').textContent = getComputedStyle(root).getPropertyValue('--model-param-count').trim();
-    document.getElementById('param-count2').textContent = getComputedStyle(root).getPropertyValue('--model-param-count').trim();
-    document.getElementById('n-layers1').textContent = getComputedStyle(root).getPropertyValue('--model-n-layers').trim();
-    document.getElementById('n-layers2').textContent = getComputedStyle(root).getPropertyValue('--model-n-layers').trim();
-    document.getElementById('n-heads1').textContent = getComputedStyle(root).getPropertyValue('--model-n-heads').trim();
-    document.getElementById('n-embed-head1').textContent = getComputedStyle(root).getPropertyValue('--model-n-embed-head').trim();
-    document.getElementById('n-embed1').textContent = getComputedStyle(root).getPropertyValue('--model-n-embed').trim();
-    document.getElementById('n-embed2').textContent = getComputedStyle(root).getPropertyValue('--model-n-embed').trim();
-    document.getElementById('n-ff1').textContent = getComputedStyle(root).getPropertyValue('--model-n-ff').trim();
-    document.getElementById('n-context1').textContent = getComputedStyle(root).getPropertyValue('--model-n-context').trim();
-    document.getElementById('n-vocab1').textContent = getComputedStyle(root).getPropertyValue('--model-n-vocab').trim();
-    document.getElementById('n-vocab2').textContent = getComputedStyle(root).getPropertyValue('--model-n-vocab').trim();
-  </script>
 
-  
-<script>
-  // Toggle main mobile menu
-  const toggle = document.querySelector('.menu-toggle');
-  const mobileMenu = document.querySelector('.mobile-menu');
+    </div>
+    <script src="codeflow.js"></script>
 
-  toggle.addEventListener('click', () => {
-    mobileMenu.classList.toggle('active');
-  });
+    <script>
+        const root = document.documentElement;
+        document.getElementById('param-count1').textContent = getComputedStyle(root).getPropertyValue('--model-param-count').trim();
+        document.getElementById('param-count2').textContent = getComputedStyle(root).getPropertyValue('--model-param-count').trim();
+        document.getElementById('n-layers1').textContent = getComputedStyle(root).getPropertyValue('--model-n-layers').trim();
+        document.getElementById('n-layers2').textContent = getComputedStyle(root).getPropertyValue('--model-n-layers').trim();
+        document.getElementById('n-heads1').textContent = getComputedStyle(root).getPropertyValue('--model-n-heads').trim();
+        document.getElementById('n-embed-head1').textContent = getComputedStyle(root).getPropertyValue('--model-n-embed-head').trim();
+        document.getElementById('n-embed1').textContent = getComputedStyle(root).getPropertyValue('--model-n-embed').trim();
+        document.getElementById('n-embed2').textContent = getComputedStyle(root).getPropertyValue('--model-n-embed').trim();
+        document.getElementById('n-ff1').textContent = getComputedStyle(root).getPropertyValue('--model-n-ff').trim();
+        document.getElementById('n-context1').textContent = getComputedStyle(root).getPropertyValue('--model-n-context').trim();
+        document.getElementById('n-vocab1').textContent = getComputedStyle(root).getPropertyValue('--model-n-vocab').trim();
+        document.getElementById('n-vocab2').textContent = getComputedStyle(root).getPropertyValue('--model-n-vocab').trim();
+    </script>
 
-  // Toggle submenu in mobile menu
-  const mobileSubmenus = document.querySelectorAll('.mobile-menu .has-submenu > a');
-  mobileSubmenus.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      link.parentElement.classList.toggle('active');
-    });
-  });
-</script>
+
+    <script>
+        // Toggle main mobile menu
+        const toggle = document.querySelector('.menu-toggle');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        toggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Toggle submenu in mobile menu
+        const mobileSubmenus = document.querySelectorAll('.mobile-menu .has-submenu > a');
+        mobileSubmenus.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                link.parentElement.classList.toggle('active');
+            });
+        });
+    </script>
 </body>
+
 </html>

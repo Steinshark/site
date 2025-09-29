@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Chess Bot Neural Network - A Python Project Part 2</title>
+    <meta name="description"
+        content="Check out my Chess Bot (it's not very good!). See the code and build one too! How to Code a Chess Neural Network. This is Part 2">
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="canonical" href="https://steinshark.github.io/site/project-chess-2.html">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-49NV8NMBJP"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-49NV8NMBJP');
+    </script>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="project-styles.css">
+    <link rel="stylesheet" href="styles.css" />
+
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --text-light: #e0e0e0;
+            --accent: linear-gradient(90deg, #00FFFF, #8A2BE2, #32CD32);
+            --button_color: linear-gradient(90deg, #00FFFF, #8A2BE2);
+            --panel-dark: #1e1e1e;
+        }
+
+        nav a {
+            color: black;
+            margin: 0 1rem;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header - Gives mobile better viewability -->
+    <header>
+        <div><strong>Chess Project Part 2</strong></div>
+        <nav class="navbar">
+            <!-- Desktop Menu -->
+            <ul class="menu desktop-menu">
+                <li><a href="https://steinshark.github.io/site/index.html">Home</a></li>
+                <li><a href="https://steinshark.github.io/site/projects.html">Projects</a></li>
+                <li><a href="https://steinshark.github.io/site/chat.html">Chatbot</a></li>
+                <li><a href="https://steinshark.github.io/site/project-chat-data.html">Teach Model</a></li>
+            </ul>
+
+            <!-- Mobile Menu -->
+            <div class="mobile-menu">
+                <ul class="menu mobile-menu">
+                    <li><a href="https://steinshark.github.io/site/index.html">Home</a></li>
+                    <li><a href="https://steinshark.github.io/site/chat.html">Chatbot</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="code-stream"></div>
+    </header>
+
+    <div class="hero">
+        <img class="hero-img" src="images/coding-project-chess-hero-image.webp" alt="SLM Project">
+        <h1>Welcome to the Chess Project</h1>
+        <p>Reproducing a Google-sized Project</p>
+    </div>
+
+    <div class="content">
+
+        <!-- Intro  -->
+        <h2>Intro</h2>
+        <p>
+            I love chess. I play chess all the time (Steinshark on Lichess).
+            The problem is I suuuuuck at chess. However. I do not suck at programming.
+            Or machine learning. Or training chess bots, as it turns out ;)
+        </p>
+        <p>
+            AlphaZero exploded onto the scene in 2017, shaking up the chess content scene
+            and finally allowing GothamChess to fit magnus AND ai into a single thumbnail.
+            Claims of blowing stockfish out of the water were rampant, if not a bit misplaced
+            after some simmering down of the scene. In either case, the rise of a self-learning
+            bot was awesome. I wanted to do it to. Enter the chess project.
+        </p>
+
+        <!-- Phase 2 Coding -->
+        <h2>Phase 2 - Implementing the Code</h2>
+        <p>
+            Coding is the fun part - until its time to debug. And there was a hell of a lot of debugging this code.
+            There are so many traps when performing tree search.
+        </p>
+
+        <p>
+            Onto the algorithm... The real novel idea here was departing form the traditional wisdom of the alpha-beta
+            pruning trees
+            that DeepBlue used to defeat Kasparov. This was the conventional
+            wisdom chess bots had been using since time immemorium (the last 50 years). Instead, the team decided to use
+            a Monte Carlo
+            Tree search guided by a neural network. Lets break this down...
+        </p>
+
+        <h3>The Monte Carlo Tree Search</h3>
+
+        <div class="two-column">
+            <div class="column-text">
+                <p>
+                    A Monte Carlo simulation is one in which we have a problem that we know how to simulate but not
+                    how to solve for directly. Heres an example: We want to compute a value for pi. Well, it's not
+                    exactly straightforward to do that. It is <em>extremely</em> easy to randomly place points on a
+                    cartesian coordinate grid. And its easy to calculate \(x^2 + y^2 < r^2\). If we place enough points,
+                        we can estimate - based on the ratio - the area of a circle of radius r. Then we just solve
+                        \(A=\pi r^2\) for \(\pi\)! </p>
+                        <p>
+                            Easy to observe, hard to calculate directly.
+                        </p>
+            </div>
+
+            <div class="column-image">
+                <img style="max-height: 300px; width: auto; object-fit: contain;"
+                    src="images/monte-carlo-simulation-of-pi.gif" alt="Monte Carlo Simulation to Approximate pi" />
+                <p class="image-caption">Monte Carlo simulation to estimate the value of pi.</p>
+            </div>
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>
